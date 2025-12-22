@@ -2,7 +2,6 @@ import { verifyToken } from "../utils/token.js";
 
 const authMiddleware = (req, res, next) => {
     try{
-        console.log("Authorization header:", req.headers.authorization);
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -15,8 +14,6 @@ const authMiddleware = (req, res, next) => {
         const decoded = verifyToken(token);
 
         req.user = decoded;
-
-        console.log(`[INFO] Authorization successful..`);
         next();
     }
     catch (error) {

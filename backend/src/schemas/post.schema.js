@@ -45,6 +45,47 @@ const postSchema = new mongoose.Schema(
             ref: "User",
             required: true
         },
+
+        media: [
+            {
+                type: {
+                    type: String,
+                    enum: ["image", "video", "pdf"],
+                    required: true
+                },
+                url: {
+                    type: String,
+                    required: true
+                },
+                uploadedBy: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User"
+                }
+            }
+        ],
+
+        likes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        ],
+
+    comments: [
+        {
+            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            text: String,
+            createdAt: { type: Date, default: Date.now },
+            replies: [
+                {
+                    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                    text: String,
+                    createdAt: { type: Date, default: Date.now }
+                }
+            ]
+        }
+    ]
     },
     {
         timestamps: true

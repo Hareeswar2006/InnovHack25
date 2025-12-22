@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema(
             required: true,
             select: false
         },
+
+        profilePic: {
+            type: String,
+            default: "https://api.dicebear.com/7.x/initials/svg?seed=User"
+        }
+
     },
     {
         timestamps: true

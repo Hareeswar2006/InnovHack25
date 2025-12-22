@@ -1,13 +1,10 @@
 import express from "express";
 import authMiddleware from "../middleware/auth.middleware.js";
+import upload from "../middleware/upload.middleware.js";
+import { updateProfilePic } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
-router.get("/test", authMiddleware, (req, res) => {
-    res.json({
-        message: "Protected route accessed",
-        user: req.user
-    });
-});
+router.put("/profile-pic", authMiddleware, upload.single("file"), updateProfilePic);
 
 export default router;

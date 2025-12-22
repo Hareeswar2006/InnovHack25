@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../schemas/user.schema.js";
+import cloudinary from "../config/cloudinary.js";
 import { genrateToken } from "../utils/token.js";
 
 export const signup = async (req, res) => {
@@ -20,12 +21,29 @@ export const signup = async (req, res) => {
             });
         }
 
+        let profilePicUrl = undefined;
+
+        if(req.file) {
+
+            const result = await new Promise((resolve, reject) => {
+                cloudinary.uploader
+                .upload_stream({ resource_type: "image" }, (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                })
+                .end(req.file.buffer);
+            });
+
+            profilePicUrl = result.secure_url;
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            profilePic: profilePicUrl
         });
         console.log(`[SUCCESS] Signup successful..!!!`)
         return res.status(201).json({
@@ -33,7 +51,8 @@ export const signup = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                profilePic: user.profilePic
             },
         });
     }
