@@ -1,10 +1,14 @@
 import Post from "../schemas/post.schema.js";
 import cloudinary from "../config/cloudinary.js";
+import { createRoom } from "../utils/createRoom.js";
 
 
 export const createPost = async(req, res) => {
     try{
-        const { title, description, category, scope, skillsRequired, teamSize } = req.body;
+        const { title, description, category, scope, skillsRequired, teamSize, roomEnabled } = req.body;
+
+        const isRoomEnabled = roomEnabled === true || roomEnabled === "true";
+
         if (!title || !description || !category) {
             console.log(`[ERROR] Title, description and category fields are required.`)
             return res.status(400).json({
@@ -65,17 +69,25 @@ export const createPost = async(req, res) => {
             scope,
             skillsRequired: skills,
             teamSize,
+            roomEnabled: isRoomEnabled,
             createdBy: req.user.userId,
             media: mediaArray
         });
+
         console.log(`[INFO] Post Created..`)
-        res.status(201).json({
+
+        if (isRoomEnabled) {
+          await createRoom(post, req.user.userId);
+          console.log(`[INFO] Room Created..`)
+        }
+        
+        return res.status(201).json({
             message: "Post created successfully",
             post
         });
     }
     catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Failed to create post",
             error: error.message
         });

@@ -71,21 +71,32 @@ const postSchema = new mongoose.Schema(
             }
         ],
 
-    comments: [
-        {
-            _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-            user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            text: String,
-            createdAt: { type: Date, default: Date.now },
-            replies: [
-                {
-                    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-                    text: String,
-                    createdAt: { type: Date, default: Date.now }
-                }
-            ]
+        comments: [
+            {
+                _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+                user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                text: String,
+                createdAt: { type: Date, default: Date.now },
+                replies: [
+                    {
+                        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                        text: String,
+                        createdAt: { type: Date, default: Date.now }
+                    }
+                ]
+            }
+        ],
+
+        roomEnabled: {
+            type: Boolean,
+            default: false,
+        },
+
+        room: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Room",
+            default: null,
         }
-    ]
     },
     {
         timestamps: true
