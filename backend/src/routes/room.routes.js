@@ -1,6 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/auth.middleware.js";
 import { createRoomLater, getActiveRooms, applyToRoom, handleApplication, getMyRooms, getRoomDetails, joinRoomByCode } from "../controllers/room.controller.js";
+import { getSuggestedUsers } from "../controllers/recommendation.controller.js";
 
 const router = express.Router();
 
@@ -11,5 +12,6 @@ router.post("/:roomId/applications/:applicationId", authMiddleware, handleApplic
 router.get("/my-rooms", authMiddleware, getMyRooms);
 router.get("/:roomId", authMiddleware, getRoomDetails);
 router.post("/search", authMiddleware, joinRoomByCode);
+router.get( "/:roomId/suggestions", authMiddleware, getSuggestedUsers);
 
 export default router;

@@ -1,5 +1,6 @@
 import Post from "../schemas/post.schema.js";
 import Room from "../schemas/rooms.schema.js";
+import User from "../schemas/user.schema.js";
 import { createRoom } from "../utils/createRoom.js";
 
 
@@ -87,6 +88,15 @@ export const applyToRoom = async (req, res) => {
     const { message } = req.body;
     const userId = req.user.userId;
 
+    const user = await User.findById(userId);
+
+    if (!user.skills || user.skills.length === 0) {
+      return res.status(400).json({
+        message: "Resume required to request joining a room",
+        requiredResume: true
+      });
+    }
+    
     const room = await Room.findById(roomId);
     if (!room) {
       return res.status(404).json({

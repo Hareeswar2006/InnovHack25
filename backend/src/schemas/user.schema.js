@@ -21,6 +21,28 @@ const userSchema = new mongoose.Schema(
             select: false
         },
 
+       skills: [
+            {
+                name: {
+                    type: String,
+                    required: true,
+                },
+                score: {
+                    type: Number,
+                    required: true,
+                },
+                category: {
+                    type: String,
+                    required: true,
+                },
+                source: {
+                    type: String,
+                    enum: ["resume", "github", "manual"],
+                    default: "resume",
+                },
+            },
+        ],
+
         profilePic: {
             type: String,
             default: "https://api.dicebear.com/7.x/initials/svg?seed=User"
