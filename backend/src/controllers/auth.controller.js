@@ -10,14 +10,14 @@ export const signup = async (req, res) => {
         if (!name || !email || !password) {
             console.log(`[ERROR] Inputs are missing....!`)
             return res.status(400).json({
-                message: "All fields are required"
+                message: "All fields are required",
             });
         }
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).json({
-                message: "User already exists"
+                message: "User already exists",
             });
         }
 
@@ -47,7 +47,8 @@ export const signup = async (req, res) => {
         });
         console.log(`[SUCCESS] Signup successful..!!!`)
         return res.status(201).json({
-            message: "USer registered successfully",
+            success: true,
+            message: "User registered successfully",
             user: {
                 id: user._id,
                 name: user.name,
@@ -72,7 +73,7 @@ export const login = async (req, res) => {
         if (!email || !password) {
             console.log(`[ERROR] All fields are required..!`);
             return res.status(400).json({
-                message: "Email and password are required"
+                message: "Email and password are required",
             });
         }
 
@@ -80,14 +81,14 @@ export const login = async (req, res) => {
         if (!user) {
             console.log(`[ERROR] Error occured - ${error.message}`);
             return res.status(401).json({
-                message: "Invalid email or password"
+                message: "Invalid email or password",
             });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({
-                message: "Incorrect password"
+                message: "Incorrect password",
             });
         }
 
@@ -107,7 +108,8 @@ export const login = async (req, res) => {
     catch (error) {
         console.log(`[ERROR] Error occured - ${error.message}`);
         return res.status(500).json({
-            message: "Login failed"
+            message: "Login failed",
+            error: error.message
         });
     }
 };

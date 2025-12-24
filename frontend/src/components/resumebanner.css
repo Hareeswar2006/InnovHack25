@@ -1,0 +1,10 @@
+.resume-banner {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}

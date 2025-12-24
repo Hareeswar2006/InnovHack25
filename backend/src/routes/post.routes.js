@@ -6,7 +6,7 @@ import upload from "../middleware/upload.middleware.js";
 const router = express.Router();
 
 router.post("/create", authMiddleware, upload.array("files", 5), createPost);
-router.get("/", authMiddleware, getAnnouncements);
+router.get("/announcements", authMiddleware, getAnnouncements);
 router.get("/rooms",authMiddleware, getRooms);
 router.post("/:postId/like", authMiddleware, toggleLikePost);
 router.post("/:postId/comments", authMiddleware, addCommentToPost);
