@@ -24,6 +24,21 @@ function Announcements() {
         loadAnnouncements();
     }, []);
 
+    useEffect(() => {
+        if (!loading && location.hash) {
+            const elementId = location.hash.replace("#", "");
+            const element = document.getElementById(elementId);
+
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    element.style.border = "2px solid #2563eb";
+                    setTimeout(() => { element.style.border = "1px solid #e5e7eb" }, 2000);
+                }, 100);
+            }
+        }
+    }, [loading, location.hash]);
+
     return (
         <div className="page-container">
             <ResumeBanner />

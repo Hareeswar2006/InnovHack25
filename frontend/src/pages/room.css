@@ -1,0 +1,77 @@
+.room-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.room-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.room-description {
+  margin-top: 8px;
+  color: #444;
+}
+
+.room-skills {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.member-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.application-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.application-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.status {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  color: #d97706;
+}
+
+.status.accepted {
+  color: #059669;
+}
+
+.status.rejected {
+  color: #dc2626;
+}
+
+.room-loading,
+.room-error {
+  text-align: center;
+  margin-top: 40px;
+}

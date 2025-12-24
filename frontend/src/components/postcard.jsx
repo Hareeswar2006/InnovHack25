@@ -1,13 +1,36 @@
 import "./postcard.css";
+import { requestToJoinRoom } from "../api/rooms";
+import {hasResume } from "../utils/user";
 
 function PostCard({ post }) {
+
+  const handleRequestToJoin = async () => {
+    if (!post.room) {
+      alert("No active room for this post");
+      return;
+    }
+
+    if (!hasResume) {
+      alert("Please upload your resume to request joining this team.");
+      return;
+    }
+
+    try{
+      const res = await requestToJoinRoom(post.room);
+
+      alert(res.message || "Request sent successfully");
+    }
+    catch (error) {
+      alert("Failed to send request");
+    }
+  };
+
   if (!post) return null;
 
-  // Extract Image URL safely
   const imageUrl = post.media?.[0]?.url;
 
   return (
-    <div className="card">
+    <div className="card" id={`post-${post._id}`}>
       {imageUrl && (
         <img 
           src={imageUrl} 
@@ -27,7 +50,7 @@ function PostCard({ post }) {
 
       <div className="card-actions">
         <button className="btn btn-outline">View</button>
-        <button className="btn btn-primary">Request to Join</button>
+        <button className="btn btn-primary" onClick={handleRequestToJoin}>Request to Join</button>
       </div>
     </div>
   );

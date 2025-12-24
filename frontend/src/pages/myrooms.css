@@ -1,0 +1,71 @@
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.room-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.room-card:hover {
+  background: #f9fafb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.room-card h3 {
+  margin-bottom: 6px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.room-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.room-meta {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #777;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rooms-empty {
+  color: #666;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.role-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 6px;
+    text-transform: uppercase;
+}
+
+.role-badge.member {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.role-badge.admin {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #e1bee7;
+}
+
+.role-badge.applicant {
+    background-color: #fff3e0;
+    color: #e65100;
+}

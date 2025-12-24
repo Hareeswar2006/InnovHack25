@@ -58,6 +58,8 @@ export const getActiveRooms = async (req, res) => {
           select: "name profilePic",
         },
       })
+      .populate("members.user", "_id") 
+      .populate("applications.user", "_id") 
       .sort({ createdAt: -1 });
 
     const formattedRooms = rooms.map((room) => ({
@@ -65,6 +67,9 @@ export const getActiveRooms = async (req, res) => {
       status: room.status,
       teamSize: room.teamSize,
       membersCount: room.members.length,
+      admin: room.admin,
+      members: room.members,         
+      applications: room.applications,
       post: room.post,
       createdAt: room.createdAt,
     }));
@@ -358,7 +363,7 @@ export const getRoomDetails = async (req, res) => {
       applications: isAdmin
         ? room.applications.filter((a) => a.status === "pending")
         : [],
-      isAdmin,
+      admin: room.admin.toString(),
     });
   } 
   catch (error) {

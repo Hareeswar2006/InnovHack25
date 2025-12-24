@@ -17,6 +17,11 @@ function Login() {
 
     if (res.token) {
       setToken(res.token);
+      
+      if (res.user) {
+          localStorage.setItem("user", JSON.stringify(res.user));
+      }
+
       navigate("/announcements");
     } else {
       setError(res.message || "Login failed");
