@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { uploadResume } from "../api/user";
 import "./resumebanner.css";
 
 function ResumeBanner() {
   const [loading, setLoading] = useState(false);
+  // Initial State: Check if user ALREADY has skills in localStorage
+  const [hasResume, setHasResume] = useState(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.skills && user.skills.length > 0;
+  });
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -20,24 +25,34 @@ function ResumeBanner() {
 
       alert(res.message || "Resume uploaded successfully");
 
-      const user = JSON.parse(localStorage.getItem("user")) || {};
-      user.skills = res.skills || [];
+      // 1. Get existing user
+      const existingUser = JSON.parse(localStorage.getItem("user")) || {};
 
-      const existingUser = JSON.parse(localStorage.getItem("user"));
-
+      // 2. 🛑 FIX: Spread existingUser (Don't nest it inside 'user: ...')
       const updatedUser = {
-          ...existingUser,
-          skills: res.data.skills
+          ...existingUser,       // Keep token, id, name, email
+          skills: res.skills     // Add/Update skills array
       };
 
+      // 3. Save to LocalStorage
       localStorage.setItem("user", JSON.stringify(updatedUser));
+      
+      // 4. Update state to hide banner immediately
+      setHasResume(true);
+      
+      // 5. Notify other components
+      window.dispatchEvent(new Event("storage"));
 
     } catch (err) {
+      console.error(err);
       alert("Resume upload failed");
     } finally {
       setLoading(false);
     }
   };
+
+  // ✅ Logic: If user has a resume (skills), DO NOT render this component
+  if (hasResume) return null;
 
   return (
     <div className="resume-banner">

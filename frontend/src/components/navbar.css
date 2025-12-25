@@ -9,19 +9,20 @@
 }
 
 .logo {
-    font-size: 20px;
+    font-size: 23px;
     font-weight: 700;
     color: var(--primary);
 }
 
 .navbar-right {
     display: flex;
-    gap: 24px;
+    gap: 80px;
 }
 
 .navbar a {
-    font-weight: 500;
-    color: var(--text-muted);
+    font-weight: 550;
+    font-size: 17px;
+    color: rgb(65, 65, 65);
     transition: color 0.2s ease;
 }
 

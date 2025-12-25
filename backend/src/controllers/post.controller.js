@@ -352,3 +352,22 @@ export const deleteReply = async (req, res) => {
     });
   }
 };
+
+
+export const getMyPostsWithoutRoom = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const posts = await Post.find({
+      createdBy: userId,
+      roomEnabled: false,
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({ posts });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to fetch user posts",
+      error: error.message,
+    });
+  }
+};

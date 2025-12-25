@@ -9,6 +9,7 @@ import MyRooms from "./pages/myrooms";
 import Room from "./pages/room";
 import Profile from "./pages/profile";
 import Createpost from "./pages/createpost";
+import CreateRoom from "./pages/createroom";
 import Navbar from "./components/navbar";
 import ProtectedRoute from "./components/protectedroute";
 
@@ -23,6 +24,8 @@ function App() {
 
         <Route path="/announcements" element={ <ProtectedRoute> <Announcements /> </ProtectedRoute> } />
         <Route path="/posts/create" element={<ProtectedRoute> <Createpost /> </ProtectedRoute> } />
+        <Route path="/rooms/create" element={ <ProtectedRoute> <CreateRoom /> </ProtectedRoute> } />
+
         <Route path="/profile" element={<ProtectedRoute> <Profile /> </ProtectedRoute> } />
         <Route path="/rooms" element={ <ProtectedRoute> <Rooms /> </ProtectedRoute> } >
           <Route index element={<Navigate to="discover" replace />} />

@@ -9,9 +9,8 @@ function Navbar() {
             </div>
 
             <div className="navbar-right">
-                <Link to="/announcements">Announcements</Link>{" | "}
-                <Link to="/posts/create">Create Post</Link>{" | "}
-                <Link to="/rooms">Rooms</Link>{" | "}
+                <Link to="/announcements">Announcements</Link>{"  "}
+                <Link to="/rooms">Rooms</Link>{"  "}
                 <Link to="/profile">Profile</Link>
             </div>
         </nav>

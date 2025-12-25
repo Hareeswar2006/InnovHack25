@@ -1,0 +1,137 @@
+.create-post-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.create-post-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+}
+
+.create-post-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.create-post-container input:not([type="checkbox"]),
+.create-post-container textarea,
+.create-post-container select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+.create-post-container input:focus,
+.create-post-container textarea:focus,
+.create-post-container select:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.create-post-container textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background-color: #f0f7ff;
+  border: 1px solid #cce5ff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #0056b3;
+  transition: background-color 0.2s;
+}
+
+.toggle:hover {
+  background-color: #e6f2ff;
+}
+
+.toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #007bff;
+  cursor: pointer;
+}
+
+.create-post-container button {
+  margin-top: 10px;
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.create-post-container button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.create-post-container button:active {
+  transform: translateY(0);
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f1f1f1;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff4444;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0 5px;
+  margin: 0;
+}
+
+.remove-btn:hover {
+  color: #cc0000;
+  background: none;
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .create-post-container {
+    margin: 20px;
+    padding: 20px;
+  }
+}

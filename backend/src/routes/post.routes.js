@@ -1,12 +1,13 @@
 import express from "express";
 import authMiddleware from "../middleware/auth.middleware.js";
-import { createPost, getAnnouncements, getRooms, toggleLikePost, addCommentToPost, replyToComment, deleteComment, deleteReply } from "../controllers/post.controller.js";
+import { createPost, getAnnouncements, getRooms, toggleLikePost, addCommentToPost, replyToComment, deleteComment, deleteReply, getMyPostsWithoutRoom } from "../controllers/post.controller.js";
 import upload from "../middleware/upload.middleware.js";
 
 const router = express.Router();
 
 router.post("/create", authMiddleware, upload.array("files", 5), createPost);
 router.get("/announcements", authMiddleware, getAnnouncements);
+router.get( "/my-posts", authMiddleware, getMyPostsWithoutRoom );
 router.get("/rooms",authMiddleware, getRooms);
 router.post("/:postId/like", authMiddleware, toggleLikePost);
 router.post("/:postId/comments", authMiddleware, addCommentToPost);

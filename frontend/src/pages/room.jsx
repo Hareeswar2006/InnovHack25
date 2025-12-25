@@ -15,7 +15,6 @@ function Room() {
   const loadRoom = async () => {
     try {
       const res = await fetchRoom(roomId);
-      console.log(res);
       setRoom(res.room || res);
     } catch (err) {
       alert("Failed to load room");

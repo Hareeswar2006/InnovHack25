@@ -1,0 +1,16 @@
+.create-room-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.room-select-card {
+  border: 1px solid #e5e7eb;
+  padding: 14px;
+  border-radius: 8px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.room-select-card:hover {
+  background: #f9fafb;
+}

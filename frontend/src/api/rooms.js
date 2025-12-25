@@ -61,3 +61,16 @@ export const fetchMyRooms = async () => {
   });
   return res.json();
 };
+
+export const createRoom = async (postId) => {
+  const res = await fetch(`${API_BASE}/rooms/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({ postId }),
+  });
+
+  return res.json();
+};

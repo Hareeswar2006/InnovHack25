@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import PostCard from "../components/postcard.jsx";
 import ResumeBanner from "../components/resumebanner.jsx";
 import { fetchAnnouncements } from "../api/posts.js";
+import "./announcements.css";
 
 function Announcements() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const loadAnnouncements = async () => {
@@ -40,19 +44,23 @@ function Announcements() {
     }, [loading, location.hash]);
 
     return (
-        <div className="page-container">
-            <ResumeBanner />
+        <>
+            <div className="page-container">
+                <ResumeBanner />
 
-            {loading && <p>Loading announcements...</p>}
+                {loading && <p>Loading announcements...</p>}
 
-            {!loading && posts.length === 0 && (
+                {!loading && posts.length === 0 && (
                 <p>No announcements found.</p>
-            )}
+                )}
 
-            {posts.map((post) => (
+                {posts.map((post) => (
                 <PostCard key={post._id} post={post} />
-            ))}
-        </div>
+                ))}
+            </div>
+
+            <button className="fab" onClick={() => navigate("/posts/create")} >+</button>
+        </>
     );
 }
 
