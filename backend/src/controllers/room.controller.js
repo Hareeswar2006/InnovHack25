@@ -212,6 +212,7 @@ export const handleApplication = async (req, res) => {
 
       if (room.members.length >= room.teamSize) {
         room.status = "full";
+        await Post.findByIdAndUpdate(room.post, { isOpen: false });
       }
     }
 
@@ -336,7 +337,8 @@ export const getRoomDetails = async (req, res) => {
         },
       })
       .populate("members.user", "name profilePic")
-      .populate("applications.user", "name profilePic");
+      .populate("applications.user", "name profilePic")
+      .select("+invitations");
 
     if (!room) {
       return res.status(404).json({ message: "Room not found" });
@@ -364,6 +366,7 @@ export const getRoomDetails = async (req, res) => {
         ? room.applications.filter((a) => a.status === "pending")
         : [],
       admin: room.admin.toString(),
+      invitations: room.invitations
     });
   } 
   catch (error) {
@@ -424,5 +427,143 @@ export const joinRoomByCode = async (req, res) => {
       message: "Failed to join room by code",
       error: error.message,
     });
+  }
+};
+
+
+export const sendRoomInvitation = async (req, res) => {
+  try {
+    const { roomId, userId } = req.params;
+
+    if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized: No user found in request" });
+    }
+
+    const adminId = req.user.userId;
+
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    
+    if (room.admin.toString() !== adminId) {
+      return res.status(403).json({ message: "Only admin can invite" });
+    }
+
+    if (!room.invitations) {
+        console.log("Debug - Invitations array is undefined. Check Schema!");
+        room.invitations = [];
+    }
+
+    const alreadyInvited = room.invitations.some(
+      (i) => i.user.toString() === userId
+    );
+    const alreadyMember = room.members.includes(userId);
+
+    if (alreadyInvited || alreadyMember) {
+      return res.status(400).json({
+        message: "User already invited or member",
+      });
+    }
+
+    room.invitations.push({ user: userId });
+    await room.save();
+
+    res.status(200).json({ message: "Invitation sent" });
+    
+  } catch (error) {
+    console.error("SERVER CRASH ERROR:", error); 
+    res.status(500).json({
+      message: "Failed to send invitation",
+      error: error.message,
+    });
+  }
+};
+
+
+export const getMyInvitations = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const rooms = await Room.find({
+      invitations: {
+        $elemMatch: {
+          user: userId,
+          status: "pending"
+        }
+      }
+    }).populate("post");
+
+    const invitations = rooms.map((room) => {
+      const invite = room.invitations.find(
+        (i) => i.user.toString() === userId
+      );
+
+      if (!invite || invite.status !== 'pending') return null;
+
+      return {
+        roomId: room._id,
+        post: room.post,
+        invitationId: invite._id,
+        status: invite.status 
+      };
+    }).filter(item => item !== null); 
+
+    res.status(200).json({ invitations });
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    res.status(500).json({
+      message: "Failed to fetch invitations",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const updateInvitationStatus = async (req, res) => {
+  try {
+    const { roomId, invitationId } = req.params;
+    const { status } = req.body;
+    const userId = req.user.userId;
+
+    console.log(`DEBUG: Updating Invite. Room: ${roomId}, InviteID: ${invitationId}, NewStatus: ${status}`);
+
+    const room = await Room.findById(roomId);
+    if (!room) return res.status(404).json({ message: "Room not found" });
+
+    const invite = room.invitations.find((i) => i._id.toString() === invitationId);
+
+    if (!invite) {
+      console.log("DEBUG: Invitation NOT found in array");
+      return res.status(404).json({ message: "Invitation not found" });
+    }
+
+    console.log(`DEBUG: Found Invite. Old Status: ${invite.status}`);
+    
+    if (["accepted", "declined", "rejected"].includes(status)) {
+        invite.status = status;
+    } else {
+        return res.status(400).json({ message: "Invalid status sent" });
+    }
+
+    if (status === "accepted") {
+      const isAlreadyMember = room.members.some(m => m.user.toString() === userId);
+      if (!isAlreadyMember) {
+         room.members.push({ user: userId, role: "member" });
+      }
+    }
+
+    await room.save();
+    console.log(`DEBUG: Saved successfully. New Status: ${invite.status}`);
+
+    res.status(200).json({ message: "Status updated", invitation: invite });
+
+  } catch (error) {
+    console.error("DEBUG: Update Failed:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

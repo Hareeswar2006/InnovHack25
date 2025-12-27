@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema(
             lowercase: true
         },
 
+        college: {
+            type: String,
+            required: false,
+            default: null
+        },
+
         password: {
             type: String,
             required: true,

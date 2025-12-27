@@ -4,71 +4,103 @@ import "./resumebanner.css";
 
 function ResumeBanner() {
   const [loading, setLoading] = useState(false);
-  // Initial State: Check if user ALREADY has skills in localStorage
-  const [hasResume, setHasResume] = useState(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    return user?.skills && user.skills.length > 0;
-  });
+  const [toast, setToast] = useState(null);
+  const [isAnimated, setIsAnimated] = useState(false); // 🟢 NEW: Trigger for growth
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const skills = user?.skills || [];
+  const hasSkills = skills.length > 0;
+
+  // Trigger animation on mount
+  useEffect(() => {
+    if (hasSkills) {
+      const timer = setTimeout(() => setIsAnimated(true), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [hasSkills]);
+
+  const getProficiency = (score) => {
+    if (score >= 78) return { label: "Expert", class: "p-expert" };
+    if (score >= 50) return { label: "Intermediate", class: "p-inter" };
+    return { label: "Beginner", class: "p-begin" };
+  };
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    if (file.type !== "application/pdf") {
-      alert("Please upload a PDF file only");
-      return;
-    }
-
     try {
       setLoading(true);
       const res = await uploadResume(file);
-
-      alert(res.message || "Resume uploaded successfully");
-
-      // 1. Get existing user
-      const existingUser = JSON.parse(localStorage.getItem("user")) || {};
-
-      // 2. 🛑 FIX: Spread existingUser (Don't nest it inside 'user: ...')
-      const updatedUser = {
-          ...existingUser,       // Keep token, id, name, email
-          skills: res.skills     // Add/Update skills array
-      };
-
-      // 3. Save to LocalStorage
+      showToast("Analysis Complete", "success");
+      const updatedUser = { ...user, skills: res.skills };
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      
-      // 4. Update state to hide banner immediately
-      setHasResume(true);
-      
-      // 5. Notify other components
       window.dispatchEvent(new Event("storage"));
-
     } catch (err) {
-      console.error(err);
-      alert("Resume upload failed");
+      showToast("Upload failed", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Logic: If user has a resume (skills), DO NOT render this component
-  if (hasResume) return null;
+  if (!hasSkills) {
+    return (
+      <div className="rb-outer-card">
+        <h2 className="rb-main-label">YOUR PROFILE</h2>
+        <div className="rb-glass-inner">
+           <div className="rb-upload-content">
+              <div className="rb-icon-circle">📂</div>
+              <h3>Analyze Resume</h3>
+              <p>Generate your skill profile</p>
+              <label className="rb-premium-btn">
+                {loading ? "Analyzing..." : "Upload PDF"}
+                <input type="file" accept="application/pdf" hidden onChange={handleFileChange} />
+              </label>
+           </div>
+        </div>
+      </div>
+    );
+  }
+
+  const topSkills = [...skills].sort((a, b) => b.score - a.score).slice(0, 7);
 
   return (
-    <div className="resume-banner">
-      <div>
-        <strong>Upload your resume</strong> to get AI-powered skills scoring and access to join rooms.
+    <div className="rb-outer-card">
+      <h2 className="rb-main-label">YOUR PROFILE</h2>
+      
+      <div className="rb-glass-inner">
+        <div className="sb-top-row">
+          <span className="sb-section-title">TOP SKILLS</span>
+          <span className="sb-total-tag">{skills.length} Total</span>
+        </div>
+
+        <div className="sb-skills-stack">
+          {topSkills.map((skill, index) => {
+            const prof = getProficiency(skill.score);
+            return (
+              <div className="sb-skill-row" key={index}>
+                <div className="sb-skill-meta">
+                  <span className="sb-skill-name">{skill.name}</span>
+                  <span className={`sb-prof-label ${prof.class}`}>{prof.label}</span>
+                </div>
+                <div className="sb-progress-track">
+                  <div 
+                    className={`sb-progress-glow ${prof.class}`} 
+                    /* 🟢 Logic: Starts at 0, goes to skill.score when isAnimated is true */
+                    style={{ width: isAnimated ? `${skill.score}%` : "0%" }}
+                  ></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <label className="btn btn-primary">
-        {loading ? "Uploading..." : "Upload Resume"}
-        <input
-          type="file"
-          accept="application/pdf"
-          hidden
-          onChange={handleFileChange}
-        />
-      </label>
+      {toast && <div className={`pc-toast ${toast.type}`}><span>{toast.message}</span></div>}
     </div>
   );
 }

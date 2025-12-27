@@ -42,54 +42,67 @@ function MyRooms() {
   };
 
   return (
-    <div className="rooms-list">
-      {rooms.length === 0 && (
-        <p className="rooms-empty">
-          You are not part of any rooms yet.
-        </p>
-      )}
+    <div className="my-rooms-container">
+      {/* Header Section */}
+      <div className="mr-header">
+        <h3>Your Rooms</h3>
+        <p>Manage your active projects and applications.</p>
+      </div>
 
-      {rooms.map((room) => (
-        <div
-          key={room.roomId}
-          className="room-card"
-          onClick={() => handleRoomClick(room)}
-        >
-          <h3>{room.post?.title || "Untitled Post"}</h3>
-          <p>{room.post?.description || ""}</p>
+      {/* Grid Section */}
+      <div className="mr-grid">
+        {rooms.length === 0 && (
+          <div className="mr-empty">
+            <div className="empty-icon">📂</div>
+            <h3>No rooms yet</h3>
+            <p>You haven't joined or created any rooms.</p>
+          </div>
+        )}
 
-          <div className="room-meta">
-            <span>
-              <strong>Role:</strong>{" "}
-              <span
-                className={`role-badge ${room.myRole.toLowerCase()}`}
-              >
+        {rooms.map((room) => (
+          <div
+            key={room.roomId}
+            className="mr-card"
+            onClick={() => handleRoomClick(room)}
+            role="button"
+            tabIndex={0}
+          >
+            {/* 1. Top Bar: Role Badge */}
+            <div className="mr-card-top">
+              <span className={`role-badge ${room.myRole.toLowerCase()}`}>
                 {room.myRole}
               </span>
-            </span>
+            </div>
 
-            {(room.myRole === "Admin" || room.myRole === "Member") && (
-              <span>
-                <strong>Status:</strong>{" "}
-                <span
-                  className={`status-badge ${room.status}`}
-                >
-                  {room.status}
-                </span>
-              </span>
-            )}
+            {/* 2. Content: Title & Desc */}
+            <div className="mr-card-content">
+              <h3>{room.post?.title || "Untitled Post"}</h3>
+              <p>{room.post?.description || "No description provided."}</p>
+            </div>
 
-            {room.myRole === "Applicant" && (
-              <span>
-                <strong>Application:</strong>{" "}
-                <span className="status-badge pending">
-                  Pending
-                </span>
-              </span>
-            )}
+            {/* 3. Footer: Status Information */}
+            <div className="mr-card-footer">
+              {(room.myRole === "Admin" || room.myRole === "Member") && (
+                <div className="mr-status-row">
+                    <span className="label">Room Status:</span>
+                    <span className={`status-text ${room.status?.toLowerCase() || 'active'}`}>
+                        {room.status || 'Active'}
+                    </span>
+                </div>
+              )}
+
+              {room.myRole === "Applicant" && (
+                <div className="mr-status-row">
+                    <span className="label">Application:</span>
+                    <span className="status-text pending">
+                        Pending Approval
+                    </span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

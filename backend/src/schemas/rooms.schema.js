@@ -69,6 +69,25 @@ const roomSchema = new mongoose.Schema(
             index: true
         },
 
+        invitations: [
+            {
+                user: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User",
+                    required: true,
+                },
+                status: {
+                    type: String,
+                    enum: ["pending", "accepted", "declined"],
+                    default: "pending",
+                },
+                createdAt: {
+                    type: Date,
+                    default: Date.now,
+                },
+            },
+        ],
+
         members : [memberSchema],
 
         applications: [applicationSchema],

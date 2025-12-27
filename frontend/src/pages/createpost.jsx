@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPost } from "../api/posts";
 import "./createpost.css";
 import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
   const navigate = useNavigate();
+  const scopeRef = useRef(null);
+  const catRef = useRef(null);
+  
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [showScopeDropdown, setShowScopeDropdown] = useState(false);
+  const [showCatDropdown, setShowCatDropdown] = useState(false); 
 
   const [form, setForm] = useState({
     title: "",
     description: "",
     category: "project",
+    scope: "public",
     skillsRequired: "",
     teamSize: 4,
     roomEnabled: false,
@@ -18,153 +25,124 @@ function CreatePost() {
 
   const [files, setFiles] = useState([]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    });
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (scopeRef.current && !scopeRef.current.contains(event.target)) setShowScopeDropdown(false);
+      if (catRef.current && !catRef.current.contains(event.target)) setShowCatDropdown(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   };
 
-const handleFileChange = (e) => {
+  const handleFileChange = (e) => {
     const newFiles = Array.from(e.target.files);
-
-    setFiles((prevFiles) => {
-      const combinedFiles = [...prevFiles, ...newFiles];
-
-      if (combinedFiles.length > 5) {
-        alert(`You can only upload 5 files max. You currently have ${prevFiles.length}.`);
-        return prevFiles;
-      }
-
-      return combinedFiles;
-    });
+    if (files.length + newFiles.length > 5) {
+        showToast("Max 5 files allowed.", "error");
+        return;
+    }
+    setFiles([...files, ...newFiles]);
     e.target.value = ""; 
-  };
-
-  const removeFile = (indexToRemove) => {
-    setFiles((prevFiles) => prevFiles.filter((_, index) => index !== indexToRemove));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const formData = new FormData();
-      
-      formData.append("title", form.title);
-      formData.append("description", form.description);
-      formData.append("category", form.category);
-      formData.append("skillsRequired", form.skillsRequired); 
-      formData.append("teamSize", form.teamSize);
-      formData.append("roomEnabled", form.roomEnabled);
-
-      files.forEach((file) => {
-        formData.append("files", file); 
-      });
+      Object.keys(form).forEach(key => formData.append(key, form[key]));
+      files.forEach(file => formData.append("files", file));
 
       await createPost(formData);
-
-      if (form.roomEnabled) {
-        alert("Post and Room created successfully!");
-        navigate("/rooms/my-rooms");
-      } else {
-        alert("Post create successfully!");
-        navigate("/announcements");
-      }
-
+      showToast(`Opportunity posted!`, "success");
+      setTimeout(() => navigate(form.roomEnabled ? "/rooms/my-rooms" : "/announcements"), 1500);
     } catch (error) {
-      console.error("Error creating post:", error);
-      alert("Failed to create post. Please try again.");
+      showToast("Failed to create post.", "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="create-post-container">
-      <h2>Create Post</h2>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          name="title"
-          placeholder="Title"
-          onChange={handleChange}
-          required
-        />
-
-        <textarea
-          name="description"
-          placeholder="Description"
-          onChange={handleChange}
-          required
-        />
-
-        <select name="category" onChange={handleChange}>
-          <option value="project">Project</option>
-          <option value="hackathon">Hackathon</option>
-        </select>
-
-        <input
-          name="skillsRequired"
-          placeholder="Skills (comma separated)"
-          onChange={handleChange}
-        />
-
-        <div className="file-input-group">
-            <label>Attachments (Max 5)</label>
-            <input
-              type="file"
-              multiple
-              accept="image/*,video/*,application/pdf"
-              onChange={handleFileChange}
-            />
-
-            <ul className="file-list">
-              {files.map((file, index) => (
-                <li key={index} className="file-item">
-                  <span>{file.name}</span>
-                  <button 
-                    type="button" 
-                    onClick={() => removeFile(index)}
-                    className="remove-btn"
-                  >
-                    ✖
-                  </button>
-                </li>
-              ))}
-            </ul>
-
-            <p className="hint">{files.length}/5 files selected</p>
+    <div className="create-post-layout">
+      <div className="create-post-container">
+        <div className="cp-header">
+            <h2>Create New Post</h2>
+            <p>Define your project visibility and team preferences.</p>
         </div>
 
-        <label className="toggle">
-          <input
-            type="checkbox"
-            name="roomEnabled"
-            onChange={handleChange}
-          />
-          Enable Room (Form team)
-        </label>
+        <form className="cp-form" onSubmit={handleSubmit}>
+          <div className="cp-group">
+              <label className="cp-crimson-label">Project Title</label>
+              <input className="cp-glass-input" placeholder="Title..." onChange={(e) => setForm({...form, title: e.target.value})} required />
+          </div>
 
-        {form.roomEnabled && (
-             <input
-             type="number"
-             name="teamSize"
-             placeholder="Team Size"
-             value={form.teamSize}
-             min="1"
-             onChange={handleChange}
-           />
-        )}
+          <div className="cp-group">
+              <label className="cp-crimson-label">Description</label>
+              <textarea className="cp-glass-input cp-textarea" placeholder="Details..." onChange={(e) => setForm({...form, description: e.target.value})} required />
+          </div>
 
-        <button type="submit" disabled={loading}>
-            {loading ? "Uploading..." : "Create"}
-        </button>
-      </form>
+          <div className="cp-row">
+              <div className="cp-group">
+                  <label className="cp-crimson-label">Category</label>
+                  <div className="custom-scope-wrapper" ref={catRef}>
+                      <div className={`scope-trigger ${showCatDropdown ? 'active' : ''}`} onClick={() => setShowCatDropdown(!showCatDropdown)}>
+                          <span>{form.category === "project" ? "🚀 Project" : "🏆 Hackathon"}</span>
+                          <span className="scope-arrow">▼</span>
+                      </div>
+                      {showCatDropdown && (
+                          <div className="scope-dropdown-menu">
+                              <div className="scope-option" onClick={() => { setForm({...form, category: 'project'}); setShowCatDropdown(false); }}>🚀 Project</div>
+                              <div className="scope-option" onClick={() => { setForm({...form, category: 'hackathon'}); setShowCatDropdown(false); }}>🏆 Hackathon</div>
+                          </div>
+                      )}
+                  </div>
+              </div>
+
+              <div className="cp-group">
+                  <label className="cp-crimson-label">Visibility</label>
+                  <div className="custom-scope-wrapper" ref={scopeRef}>
+                      <div className={`scope-trigger ${showScopeDropdown ? 'active' : ''}`} onClick={() => setShowScopeDropdown(!showScopeDropdown)}>
+                          <span>{form.scope === "public" ? "🌍 Public" : "🎓 College"}</span>
+                          <span className="scope-arrow">▼</span>
+                      </div>
+                      {showScopeDropdown && (
+                          <div className="scope-dropdown-menu">
+                              <div className="scope-option" onClick={() => { setForm({...form, scope: 'public'}); setShowScopeDropdown(false); }}>🌍 Public (All)</div>
+                              <div className="scope-option" onClick={() => { setForm({...form, scope: 'college'}); setShowScopeDropdown(false); }}>🎓 My College</div>
+                          </div>
+                      )}
+                  </div>
+              </div>
+          </div>
+
+          <div className="cp-group">
+            <label className="cp-crimson-label">Skills</label>
+            <input className="cp-glass-input" placeholder="React, AI..." onChange={(e) => setForm({...form, skillsRequired: e.target.value})} />
+          </div>
+
+          <div className="file-upload-section">
+              <label className="file-drop-zone"><input type="file" multiple hidden onChange={handleFileChange} /><span className="upload-icon">📁</span><span className="upload-text">Attach Media</span></label>
+              {files.length > 0 && <ul className="cp-file-list">{files.map((file, i) => (<li key={i} className="cp-file-item">{file.name}</li>))}</ul>}
+          </div>
+
+          <div className="cp-toggle-area">
+              <label className="cp-checkbox-container">
+                <input type="checkbox" onChange={(e) => setForm({...form, roomEnabled: e.target.checked})} /><span className="checkmark"></span>
+                <div className="toggle-text"><strong>Enable Team Room</strong><span>Private chat space.</span></div>
+              </label>
+          </div>
+
+          <button className="cp-submit-btn" type="submit" disabled={loading}>{loading ? "Processing..." : "Launch Opportunity"}</button>
+        </form>
+
+        {toast && <div className={`cp-toast ${toast.type}`}><span>{toast.message}</span></div>}
+      </div>
     </div>
   );
 }
-
 export default CreatePost;

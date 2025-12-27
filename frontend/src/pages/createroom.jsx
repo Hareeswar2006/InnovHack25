@@ -6,48 +6,109 @@ import "./createroom.css";
 
 function CreateRoom() {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
+
+  // --- Toast Helper ---
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
     const loadPosts = async () => {
-      const res = await fetchMyPostsWithoutRoom();
-      setPosts(res.posts || []);
+      try {
+        const res = await fetchMyPostsWithoutRoom();
+        setPosts(res.posts || []);
+      } catch (err) {
+        showToast("Failed to load eligible posts", "error");
+      } finally {
+        setLoading(false);
+      }
     };
     loadPosts();
   }, []);
 
   const handleCreateRoom = async (postId) => {
-    const res = await createRoom(postId);
-    navigate(`/rooms/${res.room.id}`);
+    try {
+        showToast("Setting up your room...", "success");
+        const res = await createRoom(postId);
+        // Navigate after a short delay to allow toast visibility
+        setTimeout(() => navigate(`/rooms/${res.room.id || res.room._id}`), 1000);
+    } catch (error) {
+        showToast("Failed to create room", "error");
+    }
   };
 
   return (
-    <div className="create-room-container">
-      <h2>Create Room</h2>
-
-      <button
-        className="btn btn-outline"
-        onClick={() => navigate("/posts/create")}
-      >
-        + Create New Post
-      </button>
-
-      <h3>Select an existing post</h3>
-
-      {posts.length === 0 && (
-        <p>No eligible posts found</p>
-      )}
-
-      {posts.map((post) => (
-        <div
-          key={post._id}
-          className="room-select-card"
-          onClick={() => handleCreateRoom(post._id)}
-        >
-          <h4>{post.title}</h4>
-          <p>{post.description}</p>
+    <div className="cr-layout-wrapper">
+      <div className="cr-container">
+        {/* Header Section */}
+        <div className="cr-header">
+            <h2>Create Room</h2>
+            <p>Convert an existing post into a private team workspace.</p>
         </div>
-      ))}
+
+        {/* Action: Create New Post */}
+        <div className="cr-new-post-box">
+            <p>Don't have a post yet?</p>
+            <button
+                className="cr-btn-outline"
+                onClick={() => navigate("/posts/create")}
+            >
+                <span className="plus-icon">+</span> Create New Post
+            </button>
+        </div>
+
+        <div className="cr-divider">
+            <span>OR SELECT AN EXISTING POST</span>
+        </div>
+
+        {/* Selection Grid */}
+        <div className="cr-posts-grid">
+          {loading ? (
+            <div className="cr-loading">
+                <div className="spinner-cr"></div>
+                <p>Fetching your posts...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="cr-empty">
+                <div className="empty-icon">📝</div>
+                <h3>No eligible posts found</h3>
+                <p>Posts that already have rooms or aren't your own won't appear here.</p>
+            </div>
+          ) : (
+            posts.map((post) => (
+                <div
+                  key={post._id}
+                  className="cr-select-card"
+                  onClick={() => handleCreateRoom(post._id)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="card-accent"></div>
+                  <div className="card-content">
+                    <h4>{post.title}</h4>
+                    <p>{post.description}</p>
+                    <div className="card-footer-info">
+                        <span>Category: <strong>{post.category}</strong></span>
+                        <span className="select-action">Select &rarr;</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+          )}
+        </div>
+
+        {/* --- TOAST NOTIFICATION --- */}
+        {toast && (
+          <div className={`cr-toast ${toast.type}`}>
+            {toast.type === "success" ? "✅" : "⚠️"} 
+            <span>{toast.message}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

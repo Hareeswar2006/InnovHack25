@@ -16,3 +16,4 @@ export const uploadResume = async (file) => {
 
   return res.json();
 };
+

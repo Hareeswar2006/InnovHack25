@@ -103,9 +103,13 @@ export const getAnnouncements = async (req, res) => {
       category: { $in: ["project", "hackathon"] },
     })
       .sort({ createdAt: -1 })
-      .populate("createdBy", "name profilePic")
+      .populate("createdBy", "name profilePic college")
       .populate("comments.user", "name profilePic")
-      .populate("comments.replies.user", "name profilePic");
+      .populate("comments.replies.user", "name profilePic")
+      .populate({
+        path: "room",
+        select: "members applications status",
+      });
 
     const enrichedAnnouncements = announcements.map((post) => ({
       ...post.toObject(),

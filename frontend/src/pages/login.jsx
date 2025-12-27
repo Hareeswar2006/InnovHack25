@@ -2,63 +2,100 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/auth";
 import { setToken } from "../utils/auth";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  // Removed 'error' state, replacing with Pop-up
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
-    const res = await loginUser({ email, password });
+    try {
+      const res = await loginUser({ email, password });
 
-    if (res.token) {
-      setToken(res.token);
-      
-      if (res.user) {
-          localStorage.setItem("user", JSON.stringify(res.user));
+      if (res.token) {
+        setToken(res.token);
+        
+        if (res.user) {
+            localStorage.setItem("user", JSON.stringify(res.user));
+        }
+
+        // SUCCESS POP-UP (Auto-close timer)
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Successful',
+          text: 'Redirecting to dashboard...',
+          background: '#1a1a2e',
+          color: '#ffffff',
+          timer: 1500, // Closes automatically after 1.5 seconds
+          showConfirmButton: false
+        }).then(() => {
+           navigate("/announcements");
+        });
+
+      } else {
+        // ERROR POP-UP
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: res.message || "Invalid email or password",
+          background: '#1a1a2e',
+          color: '#ffffff',
+          confirmButtonColor: '#e94560'
+        });
       }
-
-      navigate("/announcements");
-    } else {
-      setError(res.message || "Login failed");
+    } catch (err) {
+      // NETWORK ERROR POP-UP
+      Swal.fire({
+        icon: 'error',
+        title: 'Network Error',
+        text: 'Unable to connect to server.',
+        background: '#1a1a2e',
+        color: '#ffffff',
+        confirmButtonColor: '#e94560'
+      });
     }
   };
 
   return (
     <div className="page-container">
-      <h2>Login</h2>
+      <div className="glass-card">
+        <h2 className="title">Welcome Back</h2>
+        <p className="subtitle">Login to access your dashboard</p>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <br /><br />
+          <button className="btn-glow" type="submit">
+            Login
+          </button>
+        </form>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <br /><br />
-
-        <button className="btn btn-primary" type="submit">
-          Login
-        </button>
-      </form>
+        <p className="footer-text">
+          Don't have an account? <span className="link" onClick={() => navigate('/signup')}>Sign Up</span>
+        </p>
+      </div>
     </div>
   );
 }
