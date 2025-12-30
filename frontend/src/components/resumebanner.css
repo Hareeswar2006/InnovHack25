@@ -154,37 +154,56 @@
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
 
-/* Tablet & Smaller (Max-width: 900px) */
-@media (max-width: 900px) {
-    .rb-outer-card {
-        /* When stacked in mobile view, allow it to stretch */
-        max-width: 100%; 
-        margin-bottom: 20px;
-    }
-}
+/* =========================================
+   MOBILE RESUME BANNER OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Mobile Phones (Max-width: 500px) */
-@media (max-width: 500px) {
-    .rb-outer-card {
-        padding: 20px 12px;
-        border-radius: 16px;
-    }
+@media screen and (max-width: 768px) {
+  
+  /* 1. Allow Full Width on Mobile */
+  .rb-outer-card {
+    max-width: 100% !important; /* Don't restrict to 320px */
+    width: 100% !important;
+    margin-bottom: 20px !important;
+    padding: 16px !important; /* Reduce padding */
+    box-shadow: none !important; /* Remove heavy shadow on mobile for performance */
+    background-color: transparent !important; /* Optional: Blend better */
+    border: none !important; /* Cleaner look */
+  }
 
-    .rb-glass-inner {
-        padding: 16px;
-    }
+  /* 2. Slim the Glass Box */
+  .rb-glass-inner {
+    padding: 15px !important;
+    backdrop-filter: blur(5px) !important; /* Reduce blur for battery saving */
+    background: rgba(26, 26, 36, 0.8) !important; /* Darker background for contrast */
+  }
 
-    .sb-section-title {
-        font-size: 1rem; /* Slightly larger for touch readability */
-    }
+  /* 3. Header Adjustments */
+  .sb-top-row {
+    margin-bottom: 15px !important;
+  }
+  
+  .sb-section-title {
+    font-size: 1rem !important;
+  }
 
-    .rb-premium-btn {
-        padding: 14px; /* Larger tap target */
-        font-size: 0.95rem;
-    }
+  /* 4. Tighter Skill Rows */
+  .sb-skills-stack {
+    gap: 15px !important;
+  }
 
-    /* Stack skill meta data if names are very long */
-    .sb-skill-meta {
-        gap: 10px;
-    }
+  .sb-skill-name {
+    font-size: 0.8rem !important;
+  }
+  
+  .sb-prof-label {
+    font-size: 0.65rem !important;
+  }
+
+  /* 5. Make the Upload Button Finger-Friendly */
+  .rb-premium-btn {
+    padding: 14px !important;
+    font-size: 1rem !important; /* Larger text is easier to read */
+    margin-top: 15px !important;
+  }
 }

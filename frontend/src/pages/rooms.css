@@ -124,53 +124,67 @@
 }
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
+/* =========================================
+   MOBILE ROOMS WRAPPER OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Tablet & Smaller (Max-width: 900px) */
-@media (max-width: 900px) {
-    .rooms-layout-wrapper { 
-        padding: 24px; 
-    }
-}
+@media screen and (max-width: 768px) {
 
-/* Mobile Phones (Max-width: 600px) */
-@media (max-width: 600px) {
-    .rooms-layout-wrapper { 
-        padding: 20px 15px; 
-    }
+  /* 1. Reset Container Padding */
+  .rooms-layout-wrapper {
+    padding: 15px 10px !important; /* Tighten up the edges */
+    min-height: auto !important; /* Allow height to fit content */
+  }
+
+  /* 2. Header & FAB Layout */
+  .rooms-header {
+    margin-bottom: 20px !important;
+    gap: 15px !important;
+  }
+
+  .header-text h2 {
+    font-size: 1.8rem !important; /* Smaller Title */
+  }
+
+  .header-subtitle {
+    font-size: 0.9rem !important;
+  }
+
+  /* 3. Floating Action Button (FAB) */
+  .fab {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 24px !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5) !important;
+  }
+
+  /* 4. Scrollable Tabs (Instagram Style) */
+  .rooms-tabs {
+    gap: 25px !important;
+    margin-bottom: 25px !important;
     
-    .rooms-header { 
-        align-items: center; 
-        gap: 15px; 
-    }
-
-    .header-text h2 {
-        font-size: 1.8rem;
-    }
-
-    .header-subtitle {
-        font-size: 0.9rem;
-    }
+    /* Enable smooth horizontal scrolling */
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    display: flex !important;
     
-    /* Adjust FAB size for mobile */
-    .fab { 
-        width: 42px;
-        height: 42px;
-        font-size: 24px;
-        flex-shrink: 0; /* Prevent shrinking if text is long */
-    }
-    
-    /* Make tabs scrollable horizontally */
-    .rooms-tabs { 
-        gap: 20px; 
-        font-size: 0.95rem; 
-        overflow-x: auto; 
-        padding-bottom: 0; 
-        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-    }
+    /* Hide Scrollbar for cleaner look */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .rooms-tabs::-webkit-scrollbar {
+    display: none;
+  }
 
-    /* Hide scrollbar for cleaner look */
-    .rooms-tabs::-webkit-scrollbar {
-        height: 0px;
-        background: transparent;
-    }
+  .tab {
+    font-size: 0.95rem !important;
+    padding-bottom: 10px !important;
+    flex-shrink: 0 !important; /* Prevent tabs from shrinking */
+  }
+
+  /* 5. Active Tab Line adjustment */
+  .tab.active::after {
+    height: 2px !important; /* Thinner line for mobile */
+  }
 }

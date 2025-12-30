@@ -251,7 +251,7 @@ export const getMyRooms = async (req, res) => {
     })
       .populate({
         path: "post",
-        select: "title category skillsRequired teamSize",
+        select: "title description category skillsRequired teamSize",
       })
       .populate("members.user", "name profilePic")
       .populate("applications.user", "name profilePic")

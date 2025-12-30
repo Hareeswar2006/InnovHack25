@@ -196,37 +196,83 @@
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
 
-/* Tablets & Small Laptops (Max-width: 900px) */
-@media (max-width: 900px) {
-    .rooms-grid {
-        gap: 20px;
-    }
-}
+/* =========================================
+   MOBILE DISCOVER ROOMS OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Mobile Phones (Max-width: 650px) */
-@media (max-width: 650px) {
-    /* Stack Header: Title on top, Button below */
-    .discover-header-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-    }
+@media screen and (max-width: 768px) {
+  
+  /* 1. Header Cleanup */
+  .discover-header-row {
+    flex-direction: column !important;
+    align-items: stretch !important; /* Full width items */
+    gap: 15px !important;
+    margin-bottom: 20px !important;
+  }
 
-    /* Full width Join Button for easier tapping */
-    .btn-join-code {
-        width: 100%;
-        justify-content: center;
-        padding: 12px;
-    }
+  .dh-text h3 {
+    font-size: 1.5rem !important;
+    text-align: center;
+  }
 
-    /* Force Single Column Grid */
-    .rooms-grid { 
-        grid-template-columns: 1fr; 
-        gap: 16px;
-    }
+  .dh-text p {
+    text-align: center;
+    font-size: 0.9rem !important;
+  }
 
-    /* Adjust Card Padding */
-    .discover-card {
-        padding: 16px;
-    }
+  /* 2. Big "Join Code" Button */
+  .btn-join-code {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 14px !important;
+    font-size: 1rem !important;
+    margin-top: 5px !important;
+  }
+
+  /* 3. Force Single Column Grid */
+  .rooms-grid {
+    grid-template-columns: 1fr !important; /* 1 card per row */
+    gap: 15px !important;
+  }
+
+  /* 4. Card Optimization */
+  .discover-card {
+    min-height: auto !important; /* Let height fit content */
+    padding: 16px !important;
+    border-radius: 12px !important;
+    /* Disable hover lift on mobile */
+    transform: none !important;
+  }
+
+  .dc-title {
+    font-size: 1.1rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .dc-description {
+    font-size: 0.85rem !important;
+    -webkit-line-clamp: 3 !important; /* Show a bit more text */
+  }
+
+  /* 5. Skill Tags (Prevent overflow) */
+  .dc-skills-list {
+    gap: 6px !important;
+  }
+  
+  .skill-tag {
+    font-size: 0.7rem !important;
+    padding: 4px 8px !important;
+  }
+
+  /* 6. Footer Link */
+  .dc-footer {
+    padding-top: 12px !important;
+    text-align: center !important; /* Center the link */
+  }
+
+  .dc-link {
+    font-size: 0.9rem !important;
+    padding: 8px !important; /* Larger tap target */
+    display: block !important;
+  }
 }

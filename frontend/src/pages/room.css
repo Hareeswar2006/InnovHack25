@@ -332,61 +332,93 @@
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
 
-/* Tablets & Small Laptops (Max-width: 950px) */
-@media (max-width: 950px) {
-    /* Collapse the grid to a single column */
-    .room-dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Remove sticky on mobile so it flows naturally */
-    .room-right-panel {
-        position: static;
-        order: 2; /* Put chat below details on mobile */
-        width: 100%;
-    }
-}
+/* =========================================
+   MOBILE ROOM DASHBOARD OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Mobile Phones (Max-width: 600px) */
-@media (max-width: 600px) {
-    .room-container {
-        padding: 20px 15px; /* Reduce padding for more screen space */
-    }
+@media screen and (max-width: 950px) {
 
-    .rc-header {
-        flex-direction: column;
-        gap: 10px;
-    }
+  /* 1. BREAK THE GRID (Critical Fix) */
+  /* This forces the layout to be 1 column instead of 2 */
+  .room-dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
 
-    .rc-header h2 {
-        font-size: 1.5rem;
-    }
+  /* 2. Chat Window Positioning */
+  /* Remove sticky behavior on mobile so it doesn't float over content */
+  .room-right-panel {
+    position: relative !important; 
+    top: 0 !important;
+    width: 100% !important;
+    order: 2 !important; /* Push Chat to the bottom */
+    height: 600px !important; /* Give chat a fixed height on mobile */
+  }
 
-    /* Stack list items vertically */
-    .application-item, 
-    .recommendation-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    
-    .application-actions, 
-    .recommendation-item button {
-        width: 100%;
-        margin-top: 8px;
-    }
+  /* 3. Room Details (Left Panel) */
+  .room-left-panel {
+    order: 1 !important; /* Keep details on top */
+    width: 100% !important;
+  }
 
-    .rec-left {
-        width: 100%;
-        gap: 12px;
-    }
+  /* 4. Container Padding */
+  .room-container {
+    padding: 15px 10px !important;
+  }
 
-    /* Adjust Toast for Mobile */
-    .rc-toast {
-        width: 90%;
-        right: 5%;
-        left: 5%;
-        justify-content: center;
-        top: 20px;
-    }
+  /* 5. Header Adjustments */
+  .rc-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .rc-header h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* 6. Admin Code Box */
+  .code-box {
+    font-size: 0.9rem !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* 7. Stack List Items (Applications & Recommendations) */
+  .application-item, 
+  .recommendation-item {
+    flex-direction: column !important;
+    align-items: stretch !important; /* Full width children */
+    gap: 15px !important;
+    padding: 16px !important;
+  }
+
+  .rec-left {
+    width: 100% !important;
+    margin-bottom: 5px !important;
+  }
+
+  .application-actions, 
+  .recommendation-item button {
+    width: 100% !important;
+    display: flex !important;
+    gap: 10px !important;
+  }
+
+  /* 8. Make Buttons Big for Touch */
+  .btn {
+    flex: 1 !important; /* Buttons share space equally */
+    padding: 12px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* 9. Toast Notification Center */
+  .rc-toast {
+    width: 90% !important;
+    right: 5% !important;
+    left: 5% !important;
+    top: 20px !important;
+    justify-content: center !important;
+  }
 }

@@ -159,34 +159,59 @@
 }
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
+/* =========================================
+   MOBILE MY ROOMS OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Tablets (Max-width: 900px) */
-@media (max-width: 900px) {
-    .mr-grid {
-        gap: 20px;
-    }
-}
+@media screen and (max-width: 768px) {
 
-/* Mobile Phones (Max-width: 600px) */
-@media (max-width: 600px) {
-    /* Force Single Column */
-    .mr-grid {
-        grid-template-columns: 1fr;
-    }
+  /* 1. Header Cleanup */
+  .mr-header {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+  }
 
-    /* Adjust Header text size */
-    .mr-header h3 {
-        font-size: 1.15rem;
-    }
+  .mr-header h3 {
+    font-size: 1.5rem !important;
+  }
 
-    /* Reduce padding inside cards slightly */
-    .mr-card {
-        padding: 16px;
-        min-height: 180px;
-    }
+  /* 2. Force Single Column Grid */
+  .mr-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
 
-    /* Prevent overflow on status text */
-    .mr-status-row {
-        font-size: 0.8rem;
-    }
+  /* 3. Card Optimization */
+  .mr-card {
+    padding: 16px !important; /* Compact padding */
+    min-height: auto !important; /* Let height adapt to content */
+    border-radius: 12px !important;
+    
+    /* Disable Hover Effects on Touch */
+    transform: none !important; 
+    box-shadow: none !important;
+  }
+
+  /* 4. Content Sizing */
+  .mr-card-content h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .mr-card-content p {
+    font-size: 0.85rem !important;
+    margin-bottom: 12px !important;
+    -webkit-line-clamp: 2 !important; /* Keep descriptions short */
+  }
+
+  /* 5. Badge & Footer Tweaks */
+  .role-badge {
+    font-size: 0.65rem !important;
+    padding: 4px 10px !important;
+  }
+
+  .mr-card-footer {
+    padding-top: 12px !important;
+    font-size: 0.8rem !important;
+  }
 }

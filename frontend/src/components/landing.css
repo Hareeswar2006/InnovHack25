@@ -319,11 +319,92 @@
 @keyframes floatCard { 0% { transform: translateY(0) rotateZ(-5deg); } 100% { transform: translateY(-20px) rotateZ(5deg); } }
 
 /* Mobile */
-@media (max-width: 768px) {
-    .landing-nav { padding: 15px 24px; }
-    .landing-hero { padding-top: 140px; }
-    .hero-title { font-size: 3.5rem; }
-    .hero-subtitle { font-size: 1.1rem; }
-    .hero-visual-container { height: 300px; margin-top: 40px; transform: scale(0.8); }
-    .btn-primary-rich, .btn-login-glass { width: 100%; text-align: center; }
+/* =========================================
+   MOBILE & TABLET OPTIMIZATION PATCH
+   (Replace your bottom media query with this)
+   ========================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* 1. Global Safety */
+  .landing-container {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* 2. Compact Navigation */
+  .landing-nav {
+    padding: 12px 20px; /* Reduce padding */
+    background: rgba(7, 11, 20, 0.95); /* Make nav darker for readability */
+  }
+  .landing-logo {
+    font-size: 1.4rem;
+  }
+  .btn-login-glass {
+    padding: 8px 20px;
+    font-size: 0.85rem; /* Smaller button text */
+  }
+
+  /* 3. Hero Section - The "De-Congestant" */
+  .landing-hero {
+    padding-top: 100px; /* Less top space */
+    padding-bottom: 40px;
+    min-height: auto; /* Allow it to shrink */
+  }
+
+  .hero-badge {
+    margin-bottom: 16px;
+    font-size: 0.7rem;
+    padding: 6px 16px;
+  }
+
+  /* Drastically reduce font size for mobile so it doesn't wrap 4 times */
+  .hero-title {
+    font-size: 2.5rem !important; 
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem !important;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    padding: 0 10px; /* Add internal breathing room */
+  }
+
+  .btn-primary-rich {
+    width: 100%; /* Full width button is easier to tap */
+    padding: 16px 12px;
+    font-size: 1.1rem;
+  }
+
+  /* 4. Tame the 3D Visuals */
+  /* The 3D elements often overlap text on mobile. We shrink them. */
+  .hero-visual-container {
+    margin-top: 40px;
+    height: 280px; /* Force it shorter */
+    transform: scale(0.65); /* Shrink the whole 3D group */
+    transform-origin: center top; 
+    margin-bottom: -50px; /* Pull the next section up to reduce gaps */
+  }
+
+  /* 5. Stack Features Cleanly */
+  .features-section {
+    padding: 40px 20px 80px;
+  }
+  
+  .features-grid {
+    /* Force single column. The original 'minmax(340px)' is too wide for some phones */
+    grid-template-columns: 1fr !important; 
+    gap: 20px;
+  }
+
+  .feature-card-premium {
+    padding: 30px 24px; /* Less internal padding */
+    text-align: left; /* Easier to read on mobile than center */
+  }
+  
+  .feature-card-premium h3 {
+    font-size: 1.4rem;
+  }
 }

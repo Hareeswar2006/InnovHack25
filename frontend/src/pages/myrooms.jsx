@@ -11,6 +11,8 @@ function MyRooms() {
     const loadMyRooms = async () => {
       const res = await fetchMyRooms();
 
+      console.log("API Response:", res);
+
       const allRooms = [
         ...(res.owned || []).map((r) => ({
           ...r,

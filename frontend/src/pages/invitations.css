@@ -189,38 +189,77 @@
 }
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
+/* =========================================
+   MOBILE INVITATIONS OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Mobile Phones (Max-width: 600px) */
-@media (max-width: 600px) {
-    /* Force single column grid */
-    .ri-grid { 
-        grid-template-columns: 1fr; 
-    }
+@media screen and (max-width: 768px) {
 
-    /* Adjust Card Padding for Mobile */
-    .ri-card {
-        padding: 20px;
-    }
+  /* 1. Header Cleanup */
+  .ri-header {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+  }
 
-    /* Make buttons taller for easier tapping */
-    .ri-btn {
-        padding: 12px;
-        font-size: 0.95rem;
-    }
+  .ri-header h3 {
+    font-size: 1.5rem !important;
+  }
 
-    /* Stack buttons if screens are VERY narrow (iPhone SE) */
-    @media (max-width: 360px) {
-        .ri-actions {
-            flex-direction: column;
-        }
-    }
+  .ri-header p {
+    font-size: 0.9rem !important;
+  }
 
-    /* Adjust Toast for Mobile (Centered Top) */
-    .ri-toast {
-        width: 90%;
-        left: 5%;
-        right: auto;
-        top: 20px;
-        justify-content: center;
-    }
+  /* 2. Force Single Column Grid */
+  .ri-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  /* 3. Card Optimization */
+  .ri-card {
+    padding: 16px !important; /* Reduce padding from 24px */
+    min-height: auto !important; /* Allow height to fit content */
+    border-radius: 12px !important;
+    /* Disable hover lift on mobile */
+    transform: none !important; 
+    box-shadow: none !important;
+  }
+
+  .ri-card-body {
+    margin-bottom: 15px !important;
+  }
+
+  .ri-label {
+    font-size: 0.7rem !important;
+  }
+
+  .ri-card-title {
+    font-size: 1.1rem !important;
+    margin: 6px 0 10px !important;
+  }
+
+  .ri-card-desc {
+    font-size: 0.85rem !important;
+    -webkit-line-clamp: 3 !important; /* Show 3 lines max */
+  }
+
+  /* 4. Action Buttons (Big & Tappable) */
+  .ri-actions {
+    gap: 10px !important;
+  }
+
+  .ri-btn {
+    padding: 12px !important; /* Taller touch target */
+    font-size: 0.95rem !important;
+  }
+
+  /* 5. Center the Toast Notification */
+  .ri-toast {
+    width: 90% !important;
+    left: 5% !important;
+    right: auto !important;
+    top: 20px !important;
+    justify-content: center !important;
+    font-size: 0.9rem !important;
+  }
 }

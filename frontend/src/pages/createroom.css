@@ -229,64 +229,88 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
+/* =========================================
+   MOBILE CREATE ROOM OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Tablets & Smaller (Max-width: 768px) */
-@media (max-width: 768px) {
-    .cr-layout-wrapper {
-        padding: 20px;
-    }
-}
+@media screen and (max-width: 768px) {
 
-/* Mobile Phones (Max-width: 500px) */
-@media (max-width: 500px) {
-    /* Maximize space on small screens */
-    .cr-layout-wrapper {
-        padding: 15px 10px;
-    }
+  /* 1. Layout Reset */
+  .cr-layout-wrapper {
+    padding: 15px 10px !important; /* Tighten outer padding */
+    align-items: flex-start !important;
+  }
 
-    /* Shrink Header */
-    .cr-header h2 {
-        font-size: 1.6rem;
-    }
+  .cr-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 
-    .cr-header p {
-        font-size: 0.9rem;
-    }
+  /* 2. Compact Header */
+  .cr-header {
+    margin-bottom: 20px !important;
+  }
 
-    /* Adjust Box Padding */
-    .cr-new-post-box {
-        padding: 20px 15px;
-    }
+  .cr-header h2 {
+    font-size: 1.6rem !important; /* Smaller Title */
+  }
 
-    /* Adjust Card Text */
-    .card-content {
-        padding: 15px;
-    }
+  .cr-header p {
+    font-size: 0.9rem !important;
+    padding: 0 10px !important; /* prevent edge touching */
+  }
 
-    .card-content h4 {
-        font-size: 1rem;
-    }
+  /* 3. New Post Box (Glass Box) */
+  .cr-new-post-box {
+    padding: 16px !important;
+    margin-bottom: 25px !important;
+  }
 
-    /* Disable hover slide on touch to prevent sticky states */
-    .cr-select-card:hover {
-        transform: none;
-    }
-    
-    /* Make the select text visible or handle opacity better on mobile if needed, 
-       but standard behavior is tap = click */
+  .cr-btn-outline {
+    width: 100% !important; /* Full width button is easier to tap */
+    justify-content: center !important;
+    padding: 12px !important;
+  }
 
-    /* Adjust Toast positioning for mobile */
-    .cr-toast {
-        width: 90%;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-        justify-content: center;
-    }
-    
-    /* Toast Animation for centered mobile */
-    @keyframes slideIn { 
-        from { transform: translate(-50%, -20px); opacity: 0; } 
-        to { transform: translate(-50%, 0); opacity: 1; } 
-    }
+  /* 4. Card Optimization */
+  .cr-posts-grid {
+    gap: 12px !important;
+  }
+
+  .cr-select-card {
+    border-radius: 12px !important;
+    /* Disable hover slide on touch */
+    transform: none !important; 
+  }
+
+  .card-content {
+    padding: 16px !important; /* Reduce padding inside cards */
+  }
+
+  .card-content h4 {
+    font-size: 1rem !important;
+    margin-bottom: 4px !important;
+  }
+
+  .card-content p {
+    font-size: 0.85rem !important;
+    margin-bottom: 12px !important;
+    line-height: 1.4 !important;
+  }
+
+  /* 5. Force "Select" Action to be Visible */
+  /* On mobile, we can't 'hover', so we show the text always */
+  .select-action {
+    opacity: 1 !important; 
+    font-size: 0.75rem !important;
+  }
+
+  /* 6. Toast Notification Center */
+  .cr-toast {
+    width: 90% !important;
+    left: 5% !important; /* Center it manually */
+    right: auto !important;
+    top: 20px !important;
+    justify-content: center !important;
+  }
 }

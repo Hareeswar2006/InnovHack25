@@ -84,64 +84,104 @@
 
 /* --- 📱 MOBILE RESPONSIVENESS --- */
 
-/* Tablet & Smaller (Max-width: 768px) */
-@media (max-width: 768px) {
-    .pro-card {
-        margin-bottom: 20px;
-    }
-    
-    .zoom-hint {
-        display: none; /* Hide hover hint on touch devices */
-    }
-}
+/* =========================================
+   MOBILE POST CARD OPTIMIZATION (Paste at bottom)
+   ========================================= */
 
-/* Mobile Phones (Max-width: 500px) */
-@media (max-width: 500px) {
-    /* Stack the Header */
-    .pro-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
+@media screen and (max-width: 768px) {
+  
+  /* 1. Slim Down the Main Card */
+  .pro-card {
+    margin-bottom: 15px !important;
+    border-radius: 12px !important; /* Less rounded corners save space */
+  }
 
-    .header-top-line {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
+  /* 2. Compact Header (Don't stack it, keep it inline!) */
+  .pro-header {
+    padding: 12px 14px !important;
+    gap: 10px !important;
+    flex-direction: row !important; /* Force row to save vertical space */
+    align-items: center !important;
+  }
 
-    /* Stack the Footer Actions */
-    .pro-footer {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch; /* Full width buttons */
-    }
+  .avatar-circle {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.9rem !important;
+  }
 
-    .action-area {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+  .user-name {
+    font-size: 0.95rem !important;
+  }
+  
+  .post-meta {
+    font-size: 0.7rem !important;
+  }
 
-    .pro-btn {
-        width: 100%;
-        text-align: center;
-    }
+  /* 3. Tighter Body Content */
+  .pro-body {
+    padding: 0 14px 14px !important;
+  }
 
-    .expand-indicator {
-        align-self: center;
-        margin-top: 5px;
-    }
+  .pro-title {
+    font-size: 1.1rem !important; /* Smaller title */
+    margin-bottom: 6px !important;
+  }
 
-    /* Adjust Media Height */
-    .pro-media-wrapper {
-        aspect-ratio: 4 / 3; /* Taller on mobile for better visibility */
-    }
-    
-    /* Close button for lightbox on mobile */
-    .close-btn-top {
-        top: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-    }
+  .pro-desc {
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* 4. Optimize Media (Images) */
+  .pro-media-wrapper {
+    aspect-ratio: 16 / 9 !important; /* Keep it wide, don't make it tall (4/3) */
+  }
+
+  /* 5. Interaction Bar (Likes/Comments) */
+  .social-interaction-bar {
+    padding: 10px 14px !important;
+    gap: 15px !important;
+  }
+
+  .social-item {
+    font-size: 0.8rem !important;
+  }
+
+  /* 6. Expanded Content (Comments/Skills) */
+  .expanded-content-area {
+    padding: 14px !important;
+  }
+
+  .skill-tags {
+    gap: 6px !important;
+  }
+
+  .skill-tag-pill {
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* 7. Footer Buttons (Side-by-side is better than stacked) */
+  .pro-footer {
+    padding: 12px 14px !important;
+    flex-direction: row !important; /* Keep side-by-side */
+    gap: 10px !important;
+  }
+
+  .pro-btn {
+    padding: 8px 14px !important;
+    font-size: 0.75rem !important;
+    width: auto !important; /* Don't force full width */
+    flex: 1; /* Make them share space equally */
+  }
+
+  /* 8. Lightbox Close Button */
+  .close-btn-top {
+    top: 10px !important;
+    right: 10px !important;
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 1.2rem !important;
+  }
 }
