@@ -1,6 +1,6 @@
 import { getToken } from "../utils/auth";
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://p1w5x8bl-3000.inc1.devtunnels.ms";
 
 export const uploadResume = async (file) => {
   const formData = new FormData();

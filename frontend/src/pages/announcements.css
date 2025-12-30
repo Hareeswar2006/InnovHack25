@@ -15,7 +15,7 @@
 
 .sidebar-section {
     position: sticky;
-    top: 70px; /* Aligned with your header height */
+    top: 90px; /* Aligned with your header height */
     z-index: 5;
 }
 

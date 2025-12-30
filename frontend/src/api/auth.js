@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://p1w5x8bl-3000.inc1.devtunnels.ms";
 
 export const loginUser = async (data) => {
   const res = await fetch(`${API_BASE}/auth/login`, {

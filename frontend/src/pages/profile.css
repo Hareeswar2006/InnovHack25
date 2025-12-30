@@ -23,7 +23,8 @@
 ================================ */
 .profile-page-layout {
   min-height: 100vh;
-  background: radial-gradient(circle at top, #131a2f, #070a13 70%);
+  /* 🟢 FIX: Transparent so Global Rich Background Shows */
+  background: transparent; 
   padding: 40px 0;
   color: var(--text-main);
   font-family: "Inter", system-ui, sans-serif;
@@ -41,8 +42,9 @@
 .profile-header-glass,
 .stat-card-glass,
 .skills-card-glass {
-  background: var(--glass-bg);
+  background: rgba(26, 26, 36, 0.6); /* Slightly darker for contrast */
   backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
@@ -58,7 +60,8 @@
   padding: 32px;
   margin-bottom: 36px;
   position: relative;
-  z-index: 10; /* Ensure header stays above content */
+  /* 🟢 FIX: High Z-Index so dropdowns work */
+  z-index: 50; 
 }
 
 .profile-avatar-large {
@@ -73,6 +76,7 @@
   font-weight: 700;
   color: white;
   position: relative;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .avatar-glow {
@@ -87,6 +91,7 @@
 
 .profile-info-main {
   flex: 1;
+  min-width: 0; /* Prevents text overflow issues */
 }
 
 .profile-display-name {
@@ -108,6 +113,29 @@
   border-radius: 999px;
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+/* 🟢 NEW: Resume Upload Button Styling */
+.edit-profile-btn {
+    margin-top: 15px;
+    background: rgba(239, 68, 68, 0.15) !important; 
+    color: #ef4444 !important; 
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-profile-btn:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
 }
 
 /* ================================
@@ -161,6 +189,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: relative; /* Anchor for dropdown */
 }
 
 .cp-crimson-label {
@@ -171,7 +200,7 @@
 }
 
 .profile-glass-input {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   padding: 14px 16px;
@@ -179,6 +208,7 @@
   color: var(--text-main);
   outline: none;
   transition: var(--transition);
+  width: 100%;
 }
 
 .profile-glass-input::placeholder {
@@ -191,11 +221,10 @@
 }
 
 /* ================================
-   SEARCHABLE DROPDOWN (NO GUI)
+   SEARCHABLE DROPDOWN
 ================================ */
 .searchable-dropdown-wrapper {
   position: relative;
-  /* 🟢 FIX: Ensure dropdown parent has higher stacking context */
   z-index: 100; 
 }
 
@@ -204,16 +233,13 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: #0f121e; /* Solid dark bg to prevent transparency issues */
+  background: #1a1a24; /* Solid dark bg */
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   max-height: 240px;
   overflow-y: auto;
-  
-  /* 🟢 FIX: Very High Z-Index to stay on top of announcements */
   z-index: 9999; 
-  
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.8);
 }
 
 .suggestion-item {
@@ -225,7 +251,7 @@
 }
 
 .suggestion-item:hover {
-  background: var(--accent-soft);
+  background: rgba(239, 68, 68, 0.1);
   color: var(--accent);
 }
 
@@ -247,18 +273,24 @@
 ================================ */
 .profile-grid {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 320px 1fr; /* Fixed sidebar width */
   gap: 32px;
   position: relative;
-  z-index: 1; /* Lower than header dropdowns */
+  z-index: 1; 
+  align-items: start; /* Align to top */
 }
 
 /* ================================
    SIDEBAR
 ================================ */
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
 .profile-sidebar > div {
   padding: 22px;
-  margin-bottom: 22px;
 }
 
 .stat-row {
@@ -285,13 +317,19 @@
   font-size: 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 /* ================================
-   MAIN FEED
+   MAIN FEED (The Fix)
 ================================ */
+.profile-main-feed {
+    width: 100%; /* Ensure it takes full available width */
+    min-width: 0; /* Prevents Grid blowout */
+}
+
 .feed-header-area {
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .section-header {
@@ -307,16 +345,25 @@
   margin-top: 8px;
 }
 
+/* 🟢 FIX: Better Grid for Cards */
 .posts-container-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 22px;
+  /* Auto-fill columns, min width 320px */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  
+  /* 🟢 CRITICAL FIX: Prevents cards from stretching to match the tallest one */
+  align-items: start; 
 }
 
 .empty-feed-msg {
+  grid-column: 1 / -1; /* Span full width */
   padding: 60px;
   text-align: center;
   color: var(--text-muted);
+  background: rgba(255,255,255,0.02);
+  border-radius: 20px;
+  border: 1px dashed rgba(255,255,255,0.1);
 }
 
 /* ================================
@@ -333,9 +380,9 @@
   font-size: 14px;
   font-weight: 500;
   backdrop-filter: blur(14px);
-  background: #1e1e2e; /* Fallback background */
+  background: #1e1e2e; 
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-  z-index: 10000; /* Ensure it is on TOP of everything */
+  z-index: 10000; 
   display: flex;
   align-items: center;
   gap: 10px;
@@ -380,7 +427,7 @@
   }
   
   .profile-sidebar {
-    order: 2; /* Move sidebar below feed if preferred, or keep on top */
+    order: 0; 
   }
 }
 

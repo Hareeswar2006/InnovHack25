@@ -176,7 +176,7 @@ function Room() {
                 <div className="member-list">
                     {room.members.map((m) => (
                     <div className="member-item" key={m.user._id}>
-                        <img src={m.user.profilePic || "https://via.placeholder.com/40"} alt="profile" />
+                        <img src={m.user.profilePic || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} alt="profile" />
                         <div className="member-info">
                             <span className="member-name">{m.user.name}</span>
                             <span className="member-role">{m.role}</span>
@@ -208,7 +208,7 @@ function Room() {
                         .map((app) => (
                             <div className="application-item" key={app._id}>
                                 <div className="member-item">
-                                    <img src={app.user.profilePic || "https://via.placeholder.com/40"} alt="" />
+                                    <img src={app.user.profilePic || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} alt="" />
                                     <div>
                                         <strong>{app.user.name}</strong>
                                         <p className="app-msg">{app.message || "No message"}</p>
@@ -249,7 +249,7 @@ function Room() {
                             return (
                                 <div className="recommendation-item" key={user.userId}>
                                 <div className="rec-left">
-                                    <img src={user.profilePic || "https://via.placeholder.com/40"} alt="" />
+                                    <img src={user.profilePic || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} alt="" />
                                     <div className="rec-info">
                                         <div className="rec-name-row">
                                             <strong>{user.name}</strong>

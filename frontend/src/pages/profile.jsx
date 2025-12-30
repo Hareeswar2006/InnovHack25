@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // 🟢 Import SweetAlert2
 import PostCard from "../components/postcard.jsx";
 import { fetchAnnouncements } from "../api/posts.js";
 import "./profile.css";
@@ -74,6 +75,7 @@ const COLLEGE_LIST = [
 function Profile() {
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
+    const fileInputRef = useRef(null); // 🟢 Ref for file input
     
     const [user, setUser] = useState(null);
     const [myPosts, setMyPosts] = useState([]);
@@ -105,6 +107,69 @@ function Profile() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // 🟢 HANDLE RESUME UPLOAD
+    const handleResumeUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("resume", file); // Ensure this key matches backend 'upload.single("resume")'
+
+        try {
+            // Show Loading SweetAlert
+            Swal.fire({
+                title: 'Analyzing Resume...',
+                text: 'Extracting skills using AI...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+                background: '#1a1a2e',
+                color: '#fff'
+            });
+
+            // 🟢 CALL BACKEND API
+            // MAKE SURE THIS URL MATCHES YOUR BACKEND PORT/PATH
+            const res = await fetch("https://p1w5x8bl-3000.inc1.devtunnels.ms/profile/upload-resume", { 
+                method: "POST", // Your controller is "uploadResume", likely a POST or PUT
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                // Update Local State with new skills
+                const updatedUser = { ...user, skills: data.skills };
+                setUser(updatedUser);
+                localStorage.setItem("user", JSON.stringify(updatedUser)); // Persist
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Skills Refreshed!',
+                    text: `Found ${data.skills.length} skills. Profile updated.`,
+                    background: '#1a1a2e',
+                    color: '#fff',
+                    confirmButtonColor: '#ef4444'
+                });
+            } else {
+                throw new Error(data.message || "Upload failed");
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Parsing Error',
+                text: 'Could not parse resume. Try a different PDF.',
+                background: '#1a1a2e',
+                color: '#fff'
+            });
+        } finally {
+            // Reset input so user can select same file again if needed
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    };
+
     const loadMyPosts = async (userId) => {
         try {
             const res = await fetchAnnouncements();
@@ -121,7 +186,7 @@ function Profile() {
     const handleUpdate = async () => {
         setLoading(true); 
         try {
-            const response = await fetch("http://localhost:3000/profile/edit", {
+            const response = await fetch("https://p1w5x8bl-3000.inc1.devtunnels.ms/profile/edit", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -134,7 +199,6 @@ function Profile() {
                 const updatedUser = result.user || { ...user, ...editData };
                 setUser(updatedUser);
                 localStorage.setItem("user", JSON.stringify(updatedUser));
-                console.log(localStorage.getItem("user"));
                 setIsEditing(false);
                 showToast("Profile updated successfully!", "success");
             } else { showToast(result.message || "Update failed", "error"); }
@@ -219,6 +283,24 @@ function Profile() {
                                 </div>
                             </div>
                         )}
+                        
+                        {/* 🟢 NEW: Upload Resume Button */}
+                        <div className="resume-action-area" style={{ marginTop: '16px' }}>
+                            <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                style={{ display: "none" }} 
+                                accept=".pdf,.doc,.docx"
+                                onChange={handleResumeUpload}
+                            />
+                            <button 
+                                className="edit-profile-btn" 
+                                onClick={() => fileInputRef.current.click()}
+                                style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.5)' }}
+                            >
+                                📄 Update Resume & Sync Skills
+                            </button>
+                        </div>
                     </div>
 
                     <div className="profile-header-actions">
@@ -248,9 +330,16 @@ function Profile() {
                         <div className="skills-card-glass">
                             <h3 className="cp-crimson-label">Skills</h3>
                             <div className="skill-tags-wrapper">
-                                {user.skills?.map((s, i) => (
-                                    <span key={i} className="profile-skill-tag">{s.name}</span>
-                                ))}
+                                {user.skills && user.skills.length > 0 ? (
+                                    user.skills.map((s, i) => (
+                                        // Handle both string array or object array if your backend changes
+                                        <span key={i} className="profile-skill-tag">
+                                            {typeof s === 'string' ? s : s.name}
+                                        </span>
+                                    ))
+                                ) : (
+                                    <p className="no-skills-text">No skills found. Upload resume.</p>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { requestToJoinRoom } from "../api/rooms";
 import { hasResume } from "../utils/user";
 import "./postcard.css";
@@ -47,8 +48,21 @@ function PostCard({ post: initialPost, currentUser }) {
 
   const handleToggleLike = async (e) => {
     e.stopPropagation();
+    const creatorId = post.createdBy?._id || post.createdBy || post.creator; 
+    if (String(creatorId) === String(currentUser?.id || currentUser?._id)) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Nice try!',
+            text: 'You cannot like your own post.',
+            width: '350px',
+            padding: '2em',
+            buttonsStyling: true
+        });
+        return;
+    }
+
     try {
-      const res = await fetch(`http://localhost:3000/posts/${post._id}/like`, {
+      const res = await fetch(`https://p1w5x8bl-3000.inc1.devtunnels.ms/posts/${post._id}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,12 +75,11 @@ function PostCard({ post: initialPost, currentUser }) {
       }
     } catch (err) { showToast("Like failed", "error"); }
   };
-
   const handleAddComment = async (e) => {
     e.stopPropagation();
     if (!commentText.trim()) return;
     try {
-      const res = await fetch(`http://localhost:3000/posts/${post._id}/comments`, {
+      const res = await fetch(`https://p1w5x8bl-3000.inc1.devtunnels.ms/posts/${post._id}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +103,7 @@ function PostCard({ post: initialPost, currentUser }) {
   const handleAddReply = async (commentId) => {
     if (!replyText.trim()) return;
     try {
-      const res = await fetch(`http://localhost:3000/posts/${post._id}/comments/${commentId}/reply`, {
+      const res = await fetch(`https://p1w5x8bl-3000.inc1.devtunnels.ms/posts/${post._id}/comments/${commentId}/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

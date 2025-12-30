@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import "./chatwindow.css";
 
-const SOCKET_URL = "http://localhost:3000"; 
+const SOCKET_URL = "https://p1w5x8bl-3000.inc1.devtunnels.ms"; 
 
 function ChatWindow({ roomId, currentUser }) {
   const [socket, setSocket] = useState(null);

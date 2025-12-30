@@ -21,7 +21,7 @@ function Announcements() {
     const scopeRef = useRef(null);
     const navigate = useNavigate();
     const currentUser = JSON.parse(localStorage.getItem("user"));
-
+    const isSkillsMissing = !currentUser?.skills || currentUser.skills.length === 0;
     const isCollegeMissing = !currentUser?.college || currentUser.college.trim() === "";
 
     useEffect(() => {
@@ -112,8 +112,20 @@ function Announcements() {
     return (
         <div className="dashboard-layout">
             <div className="feed-section">
-                
-                {isCollegeMissing && (
+               {isSkillsMissing ? (
+                    <div className="profile-completion-banner">
+                        <div className="banner-content">
+                            <span className="banner-icon">📄</span>
+                            <div className="banner-text">
+                                <strong>Resume Missing</strong>
+                                <p>Upload your resume to extract skills and unlock AI matching.</p>
+                            </div>
+                        </div>
+                        <button className="banner-cta-btn" onClick={() => navigate("/profile")}>
+                            Upload Resume
+                        </button>
+                    </div>
+                ) : isCollegeMissing ? (
                     <div className="profile-completion-banner">
                         <div className="banner-content">
                             <span className="banner-icon">🎓</span>
@@ -126,8 +138,7 @@ function Announcements() {
                             Update Profile
                         </button>
                     </div>
-                )}
-
+                ) : null}
                 <div className="search-section-wrapper">
                     <div className="search-glass-container">
                         <span className="search-icon">🔍</span>
