@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema(
         college: {
             type: String,
             required: false,
-            default: null
+            default: "",
+            trim: true
         },
 
         password: {
