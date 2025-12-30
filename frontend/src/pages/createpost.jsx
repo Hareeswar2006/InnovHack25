@@ -19,7 +19,7 @@ function CreatePost() {
     category: "project",
     scope: "public",
     skillsRequired: "",
-    teamSize: 4,
+    teamSize: 4, 
     roomEnabled: false,
   });
 
@@ -54,7 +54,9 @@ function CreatePost() {
     setLoading(true);
     try {
       const formData = new FormData();
-      Object.keys(form).forEach(key => formData.append(key, form[key]));
+      Object.keys(form).forEach(key => {
+          formData.append(key, form[key]);
+      });
       files.forEach(file => formData.append("files", file));
 
       await createPost(formData);
@@ -78,12 +80,24 @@ function CreatePost() {
         <form className="cp-form" onSubmit={handleSubmit}>
           <div className="cp-group">
               <label className="cp-crimson-label">Project Title</label>
-              <input className="cp-glass-input" placeholder="Title..." onChange={(e) => setForm({...form, title: e.target.value})} required />
+              <input 
+                className="cp-glass-input" 
+                placeholder="Title..." 
+                value={form.title}
+                onChange={(e) => setForm({...form, title: e.target.value})} 
+                required 
+              />
           </div>
 
           <div className="cp-group">
               <label className="cp-crimson-label">Description</label>
-              <textarea className="cp-glass-input cp-textarea" placeholder="Details..." onChange={(e) => setForm({...form, description: e.target.value})} required />
+              <textarea 
+                className="cp-glass-input cp-textarea" 
+                placeholder="Details..." 
+                value={form.description}
+                onChange={(e) => setForm({...form, description: e.target.value})} 
+                required 
+              />
           </div>
 
           <div className="cp-row">
@@ -121,23 +135,66 @@ function CreatePost() {
           </div>
 
           <div className="cp-group">
-            <label className="cp-crimson-label">Skills</label>
-            <input className="cp-glass-input" placeholder="React, AI..." onChange={(e) => setForm({...form, skillsRequired: e.target.value})} />
+            <label className="cp-crimson-label">Skills (Comma separated)</label>
+            <input 
+                className="cp-glass-input" 
+                placeholder="React, AI, Python..." 
+                value={form.skillsRequired}
+                onChange={(e) => setForm({...form, skillsRequired: e.target.value})} 
+            />
           </div>
 
           <div className="file-upload-section">
-              <label className="file-drop-zone"><input type="file" multiple hidden onChange={handleFileChange} /><span className="upload-icon">📁</span><span className="upload-text">Attach Media</span></label>
-              {files.length > 0 && <ul className="cp-file-list">{files.map((file, i) => (<li key={i} className="cp-file-item">{file.name}</li>))}</ul>}
+              <label className="file-drop-zone">
+                <input type="file" multiple hidden onChange={handleFileChange} />
+                <span className="upload-icon">📁</span>
+                <span className="upload-text">Attach Media</span>
+              </label>
+              {files.length > 0 && (
+                <ul className="cp-file-list">
+                    {files.map((file, i) => (
+                        <li key={i} className="cp-file-item">
+                            <span>{file.name}</span>
+                            <button type="button" onClick={() => setFiles(files.filter((_, idx) => idx !== i))}>✕</button>
+                        </li>
+                    ))}
+                </ul>
+              )}
           </div>
 
           <div className="cp-toggle-area">
               <label className="cp-checkbox-container">
-                <input type="checkbox" onChange={(e) => setForm({...form, roomEnabled: e.target.checked})} /><span className="checkmark"></span>
-                <div className="toggle-text"><strong>Enable Team Room</strong><span>Private chat space.</span></div>
+                <input 
+                    type="checkbox" 
+                    checked={form.roomEnabled}
+                    onChange={(e) => setForm({...form, roomEnabled: e.target.checked})} 
+                />
+                <span className="checkmark"></span>
+                <div className="toggle-text">
+                    <strong>Enable Team Room</strong>
+                    <span>Creates a private collaboration space.</span>
+                </div>
               </label>
           </div>
 
-          <button className="cp-submit-btn" type="submit" disabled={loading}>{loading ? "Processing..." : "Launch Opportunity"}</button>
+          {form.roomEnabled && (
+            <div className="cp-group animate-slide-down">
+                <label className="cp-crimson-label">Required Team Size</label>
+                <input 
+                    type="number" 
+                    className="cp-glass-input" 
+                    min="2" 
+                    max="20"
+                    value={form.teamSize}
+                    onChange={(e) => setForm({...form, teamSize: parseInt(e.target.value) || 2})}
+                />
+                <p className="cp-hint-text">Includes yourself and team members.</p>
+            </div>
+          )}
+
+          <button className="cp-submit-btn" type="submit" disabled={loading}>
+            {loading ? "Processing..." : "Launch Opportunity"}
+          </button>
         </form>
 
         {toast && <div className={`cp-toast ${toast.type}`}><span>{toast.message}</span></div>}

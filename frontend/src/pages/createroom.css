@@ -3,7 +3,10 @@
   display: flex;
   justify-content: center;
   padding: 40px 20px;
-  background-color: #121218;
+  
+  /* 🟢 Transparent so the global rich background shows */
+  background: transparent;
+  
   min-height: 100vh;
 }
 
@@ -31,14 +34,19 @@
   margin-top: 8px;
 }
 
-/* New Post Button Area */
+/* New Post Button Area (Glass Style) */
 .cr-new-post-box {
-    background-color: #1e1e2e;
-    border: 1px solid #2d2d3f;
+    /* 🟢 Glass Effect */
+    background: rgba(30, 30, 46, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 24px;
     border-radius: 12px;
     text-align: center;
     margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 .cr-new-post-box p {
@@ -72,13 +80,13 @@
     align-items: center;
     text-align: center;
     margin-bottom: 32px;
-    color: #475569;
+    color: #94a3b8; /* Slightly lighter for better contrast */
 }
 
 .cr-divider::before, .cr-divider::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #2d2d3f;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cr-divider span {
@@ -96,8 +104,12 @@
 }
 
 .cr-select-card {
-    background-color: #1e1e2e;
-    border: 1px solid #2d2d3f;
+    /* 🟢 Glass Effect */
+    background: rgba(30, 30, 46, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     display: flex;
     overflow: hidden;
@@ -119,8 +131,9 @@
 
 .cr-select-card:hover {
     transform: translateX(5px);
-    border-color: #ef4444;
-    background-color: #252538;
+    border-color: rgba(239, 68, 68, 0.5);
+    background-color: rgba(37, 37, 56, 0.8);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .cr-select-card:hover .card-accent {
@@ -167,8 +180,12 @@
 .cr-empty {
     text-align: center;
     padding: 40px;
-    background-color: #1e1e2e;
-    border: 1px dashed #2d2d3f;
+    
+    /* 🟢 Glass Effect */
+    background: rgba(30, 30, 46, 0.5);
+    backdrop-filter: blur(10px);
+    
+    border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     color: #64748b;
 }
@@ -210,3 +227,66 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablets & Smaller (Max-width: 768px) */
+@media (max-width: 768px) {
+    .cr-layout-wrapper {
+        padding: 20px;
+    }
+}
+
+/* Mobile Phones (Max-width: 500px) */
+@media (max-width: 500px) {
+    /* Maximize space on small screens */
+    .cr-layout-wrapper {
+        padding: 15px 10px;
+    }
+
+    /* Shrink Header */
+    .cr-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .cr-header p {
+        font-size: 0.9rem;
+    }
+
+    /* Adjust Box Padding */
+    .cr-new-post-box {
+        padding: 20px 15px;
+    }
+
+    /* Adjust Card Text */
+    .card-content {
+        padding: 15px;
+    }
+
+    .card-content h4 {
+        font-size: 1rem;
+    }
+
+    /* Disable hover slide on touch to prevent sticky states */
+    .cr-select-card:hover {
+        transform: none;
+    }
+    
+    /* Make the select text visible or handle opacity better on mobile if needed, 
+       but standard behavior is tap = click */
+
+    /* Adjust Toast positioning for mobile */
+    .cr-toast {
+        width: 90%;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        justify-content: center;
+    }
+    
+    /* Toast Animation for centered mobile */
+    @keyframes slideIn { 
+        from { transform: translate(-50%, -20px); opacity: 0; } 
+        to { transform: translate(-50%, 0); opacity: 1; } 
+    }
+}

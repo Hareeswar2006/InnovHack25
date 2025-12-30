@@ -5,8 +5,9 @@
   border-radius: 20px;
   padding: 24px 16px;
   width: 100%;
-  max-width: 320px;
+  max-width: 320px; /* Default sidebar width */
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
 }
 
 .rb-main-label {
@@ -137,16 +138,53 @@
 .rb-upload-content h3 { color: white; margin: 0; font-size: 1.1rem; }
 .rb-upload-content p { color: #94a3b8; font-size: 0.8rem; margin: 4px 0 16px; }
 
-/* Toast Notification Styles from previous turns... */
+/* Toast Notification Styles */
 .pc-toast {
-    position: fixed;
-    top: 24px;
-    right: 24px;
-    background: #1e1e2e;
-    color: white;
-    padding: 12px 20px;
-    border-left: 4px solid #ef4444;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    z-index: 10000;
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: #1e1e2e;
+  color: white;
+  padding: 12px 20px;
+  border-left: 4px solid #ef4444;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  z-index: 10000;
+}
+
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablet & Smaller (Max-width: 900px) */
+@media (max-width: 900px) {
+    .rb-outer-card {
+        /* When stacked in mobile view, allow it to stretch */
+        max-width: 100%; 
+        margin-bottom: 20px;
+    }
+}
+
+/* Mobile Phones (Max-width: 500px) */
+@media (max-width: 500px) {
+    .rb-outer-card {
+        padding: 20px 12px;
+        border-radius: 16px;
+    }
+
+    .rb-glass-inner {
+        padding: 16px;
+    }
+
+    .sb-section-title {
+        font-size: 1rem; /* Slightly larger for touch readability */
+    }
+
+    .rb-premium-btn {
+        padding: 14px; /* Larger tap target */
+        font-size: 0.95rem;
+    }
+
+    /* Stack skill meta data if names are very long */
+    .sb-skill-meta {
+        gap: 10px;
+    }
 }

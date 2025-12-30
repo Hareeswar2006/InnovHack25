@@ -11,7 +11,6 @@ export const requestToJoinRoom = async (roomId, message = "") => {
         },
         body: JSON.stringify({ message })
     });
-    console.log(res);
     return res.json();
 };
 

@@ -157,7 +157,56 @@
   75% { transform: translateX(5px); }
 }
 
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Standard Mobile Phones (Max-width: 500px) */
 @media (max-width: 500px) {
-  .otp-container { gap: 4px; }
-  .otp-input { width: 32px; height: 42px; font-size: 1rem; }
+    /* Tighten the inputs */
+    .otp-container { 
+        gap: 6px; 
+    }
+    .otp-input { 
+        width: 36px; 
+        height: 45px; 
+        font-size: 1.1rem; 
+    }
+
+    /* Reduce modal padding to gain width */
+    .modal-content {
+        width: 95%;
+        padding: 24px 20px;
+    }
+
+    /* Adjust Header */
+    .modal-header {
+        margin-bottom: 20px;
+    }
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Adjust Close Button */
+    .close-btn {
+        top: 12px;
+        right: 15px;
+        font-size: 22px;
+    }
+
+    /* Adjust Room Preview Card */
+    .room-preview {
+        padding: 15px;
+    }
+    .preview-header h3 {
+        font-size: 1rem;
+    }
+    .preview-desc {
+        font-size: 0.85rem;
+    }
+}
+
+/* Very Small Screens (e.g. iPhone SE, Foldable cover screens) */
+@media (max-width: 360px) {
+    .otp-container { gap: 4px; }
+    .otp-input { width: 32px; height: 42px; font-size: 1rem; }
+    .modal-content { padding: 20px 15px; }
 }

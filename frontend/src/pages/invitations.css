@@ -158,14 +158,7 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Mobile */
-@media (max-width: 600px) {
-  .ri-grid { grid-template-columns: 1fr; }
-}
-
-/* ... (Keep all previous CSS) ... */
-
-/* --- Toast Notification (Shared Style) --- */
+/* --- Toast Notification --- */
 .ri-toast {
   position: fixed;
   top: 24px;
@@ -193,4 +186,41 @@
 @keyframes slideInToast {
   from { opacity: 0; transform: translateY(-20px) scale(0.9); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Mobile Phones (Max-width: 600px) */
+@media (max-width: 600px) {
+    /* Force single column grid */
+    .ri-grid { 
+        grid-template-columns: 1fr; 
+    }
+
+    /* Adjust Card Padding for Mobile */
+    .ri-card {
+        padding: 20px;
+    }
+
+    /* Make buttons taller for easier tapping */
+    .ri-btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    /* Stack buttons if screens are VERY narrow (iPhone SE) */
+    @media (max-width: 360px) {
+        .ri-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Adjust Toast for Mobile (Centered Top) */
+    .ri-toast {
+        width: 90%;
+        left: 5%;
+        right: auto;
+        top: 20px;
+        justify-content: center;
+    }
 }

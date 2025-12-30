@@ -57,6 +57,8 @@
   gap: 32px;
   padding: 32px;
   margin-bottom: 36px;
+  position: relative;
+  z-index: 10; /* Ensure header stays above content */
 }
 
 .profile-avatar-large {
@@ -193,6 +195,8 @@
 ================================ */
 .searchable-dropdown-wrapper {
   position: relative;
+  /* 🟢 FIX: Ensure dropdown parent has higher stacking context */
+  z-index: 100; 
 }
 
 .custom-suggestions-menu {
@@ -200,13 +204,16 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  background: rgba(10, 14, 30, 0.96);
+  background: #0f121e; /* Solid dark bg to prevent transparency issues */
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   max-height: 240px;
   overflow-y: auto;
-  z-index: 20;
-  backdrop-filter: blur(20px);
+  
+  /* 🟢 FIX: Very High Z-Index to stay on top of announcements */
+  z-index: 9999; 
+  
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
 }
 
 .suggestion-item {
@@ -214,6 +221,7 @@
   cursor: pointer;
   font-size: 14px;
   transition: var(--transition);
+  color: #cbd5e1;
 }
 
 .suggestion-item:hover {
@@ -241,6 +249,8 @@
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: 32px;
+  position: relative;
+  z-index: 1; /* Lower than header dropdowns */
 }
 
 /* ================================
@@ -310,24 +320,22 @@
 }
 
 /* ================================
-   TOASTS
-================================ */
-/* ================================
-   TOAST NOTIFICATIONS (FIXED)
+   TOAST NOTIFICATIONS
 ================================ */
 .cp-toast {
   position: fixed;
-  top: 24px;                /* change to bottom: 24px if you prefer */
+  top: 24px;              
   right: 24px;
-  width: max-content;       /* 🔑 prevents full-width block */
+  width: max-content;       
   max-width: 360px;
   padding: 12px 18px;
   border-radius: 14px;
   font-size: 14px;
   font-weight: 500;
   backdrop-filter: blur(14px);
+  background: #1e1e2e; /* Fallback background */
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-  z-index: 9999;
+  z-index: 10000; /* Ensure it is on TOP of everything */
   display: flex;
   align-items: center;
   gap: 10px;
@@ -346,32 +354,71 @@
   border-left: 4px solid #ff5c5c;
 }
 
-/* Slide from right */
 @keyframes toastSlideIn {
-  from {
-    transform: translateX(40px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 /* ================================
-   RESPONSIVE
+   📱 RESPONSIVE MEDIA QUERIES
 ================================ */
+
+/* Tablet & Smaller (Max-width: 900px) */
 @media (max-width: 900px) {
   .profile-header-glass {
     flex-direction: column;
     text-align: center;
+    gap: 20px;
   }
 
   .profile-edit-inputs {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack inputs */
   }
 
   .profile-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack sidebar on top of feed */
   }
+  
+  .profile-sidebar {
+    order: 2; /* Move sidebar below feed if preferred, or keep on top */
+  }
+}
+
+/* Mobile Phones (Max-width: 500px) */
+@media (max-width: 500px) {
+    .profile-page-layout {
+        padding: 20px 0;
+    }
+    
+    .profile-container {
+        padding: 0 15px;
+    }
+
+    .profile-header-glass {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .profile-avatar-large {
+        width: 80px; height: 80px;
+        font-size: 32px;
+    }
+
+    .profile-display-name {
+        font-size: 22px;
+    }
+
+    .posts-container-grid {
+        grid-template-columns: 1fr; /* Single column posts */
+    }
+
+    /* Adjust Toast for Mobile */
+    .cp-toast {
+        top: 20px;
+        right: 5%;
+        left: 5%;
+        width: 90%;
+        max-width: none;
+        justify-content: center;
+    }
 }

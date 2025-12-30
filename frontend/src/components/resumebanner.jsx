@@ -5,13 +5,12 @@ import "./resumebanner.css";
 function ResumeBanner() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [isAnimated, setIsAnimated] = useState(false); // 🟢 NEW: Trigger for growth
+  const [isAnimated, setIsAnimated] = useState(false); 
 
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const skills = user?.skills || [];
   const hasSkills = skills.length > 0;
 
-  // Trigger animation on mount
   useEffect(() => {
     if (hasSkills) {
       const timer = setTimeout(() => setIsAnimated(true), 350);
@@ -90,7 +89,6 @@ function ResumeBanner() {
                 <div className="sb-progress-track">
                   <div 
                     className={`sb-progress-glow ${prof.class}`} 
-                    /* 🟢 Logic: Starts at 0, goes to skill.score when isAnimated is true */
                     style={{ width: isAnimated ? `${skill.score}%` : "0%" }}
                   ></div>
                 </div>

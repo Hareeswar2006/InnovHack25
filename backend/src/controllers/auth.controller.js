@@ -94,7 +94,6 @@ export const login = async (req, res) => {
 
         const token = genrateToken(user._id);
 
-        console.log(`[INFO] JWT token generated for User - ${user.name}...`);
         return res.status(200).json({
             message: "Login Successful",
             token,
@@ -104,6 +103,7 @@ export const login = async (req, res) => {
                 email: user.email,
                 profilePic: user.profilePic,
                 skills: user.skills || [],
+                college: user.college || "",
             }
         });
     }

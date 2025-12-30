@@ -194,6 +194,39 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-@media (max-width: 600px) {
-  .rooms-grid { grid-template-columns: 1fr; }
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablets & Small Laptops (Max-width: 900px) */
+@media (max-width: 900px) {
+    .rooms-grid {
+        gap: 20px;
+    }
+}
+
+/* Mobile Phones (Max-width: 650px) */
+@media (max-width: 650px) {
+    /* Stack Header: Title on top, Button below */
+    .discover-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    /* Full width Join Button for easier tapping */
+    .btn-join-code {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    /* Force Single Column Grid */
+    .rooms-grid { 
+        grid-template-columns: 1fr; 
+        gap: 16px;
+    }
+
+    /* Adjust Card Padding */
+    .discover-card {
+        padding: 16px;
+    }
 }

@@ -5,10 +5,8 @@ import "./navbar.css";
 function Navbar() {
     const navigate = useNavigate();
     
-    // CHECK: Is the user logged in?
-    // We check if 'user' data exists in localStorage
     const user = localStorage.getItem("user"); 
-    const isLoggedIn = !!user; // Converts result to true/false
+    const isLoggedIn = !!user; 
 
     const handleLogout = () => {
         Swal.fire({
@@ -26,8 +24,7 @@ function Navbar() {
                 localStorage.removeItem("user");
                 localStorage.removeItem("token"); 
                 
-                // Redirect to Login
-                navigate("/login");
+                navigate("/");
                 
                 Swal.fire({
                     icon: 'success',
@@ -44,7 +41,6 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-left">
-                {/* If logged in, go to Dashboard. If not, go to Login */}
                 <Link to={isLoggedIn ? "/announcements" : "/login"} className="logo">
                     SkillSync
                 </Link>
@@ -52,7 +48,6 @@ function Navbar() {
 
             <div className="navbar-right">
                 {isLoggedIn ? (
-                    // OPTION A: User IS Logged In -> Show App Links
                     <>
                         <Link to="/announcements" className="nav-link">Announcements</Link>
                         <Link to="/rooms" className="nav-link">Rooms</Link>
@@ -63,8 +58,8 @@ function Navbar() {
                         </button>
                     </>
                 ) : (
-                    // OPTION B: User is Guest -> Show Login/Signup
                     <>
+                        <Link to="/" className="nav-link">Home</Link>
                         <Link to="/login" className="nav-link">Login</Link>
                         <Link to="/signup" className="btn-highlight">
                             Get Started

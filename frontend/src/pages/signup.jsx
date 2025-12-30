@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Added Link if you want to link to Login
+import { useNavigate, Link } from "react-router-dom"; 
 import { signupUser } from "../api/auth";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2"; 
 
 function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // We removed the 'error' state variable because we will use a Pop-up for errors now.
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,22 +16,20 @@ function Signup() {
       const res = await signupUser({ name, email, password });
 
       if (res.success) {
-        // SUCCESS POP-UP
         Swal.fire({
           title: 'Welcome to SkillSync!',
           text: 'Account created successfully.',
           icon: 'success',
-          background: '#1a1a2e', // Dark background for modal
-          color: '#ffffff', // White text
+          background: '#1a1a2e', 
+          color: '#ffffff', 
           confirmButtonText: 'Go to Login',
-          confirmButtonColor: '#e94560' // Accent color
+          confirmButtonColor: '#e94560' 
         }).then((result) => {
           if (result.isConfirmed) {
             navigate("/login");
           }
         });
       } else {
-        // ERROR POP-UP (API Error)
         Swal.fire({
           title: 'Oops...',
           text: res.message || "Signup failed. Please try again.",
@@ -43,7 +40,6 @@ function Signup() {
         });
       }
     } catch (err) {
-      // NETWORK/SYSTEM ERROR POP-UP
       Swal.fire({
         title: 'Network Error',
         text: 'Something went wrong. Check your connection.',
@@ -97,7 +93,6 @@ function Signup() {
           </button>
         </form>
         
-        {/* Optional: Link to login if they already have an account */}
         <p className="footer-text">
           Already have an account? <span className="link" onClick={() => navigate('/login')}>Login</span>
         </p>

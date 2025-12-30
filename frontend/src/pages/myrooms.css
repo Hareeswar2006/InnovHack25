@@ -158,9 +158,35 @@
   to { opacity: 1; }
 }
 
-/* Mobile */
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablets (Max-width: 900px) */
+@media (max-width: 900px) {
+    .mr-grid {
+        gap: 20px;
+    }
+}
+
+/* Mobile Phones (Max-width: 600px) */
 @media (max-width: 600px) {
-  .mr-grid {
-    grid-template-columns: 1fr;
-  }
+    /* Force Single Column */
+    .mr-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust Header text size */
+    .mr-header h3 {
+        font-size: 1.15rem;
+    }
+
+    /* Reduce padding inside cards slightly */
+    .mr-card {
+        padding: 16px;
+        min-height: 180px;
+    }
+
+    /* Prevent overflow on status text */
+    .mr-status-row {
+        font-size: 0.8rem;
+    }
 }

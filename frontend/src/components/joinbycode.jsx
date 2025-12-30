@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import "./joinbycode.css";
 
 function JoinByCode({ onClose }) {
-  // CHANGED: 8 characters instead of 6
   const [otp, setOtp] = useState(new Array(8).fill(""));
   
   const [loading, setLoading] = useState(false);
@@ -15,19 +14,15 @@ function JoinByCode({ onClose }) {
   const navigate = useNavigate();
   const inputRefs = useRef([]);
 
-  // --- INPUT HANDLERS ---
   const handleChange = (element, index) => {
     const val = element.value;
     
-    // VALIDATION: Allow only Alphanumeric (Letters & Numbers)
     if (!/^[a-zA-Z0-9]*$/.test(val)) return;
 
     const newOtp = [...otp];
-    // Force uppercase for better UX
     newOtp[index] = val.toUpperCase(); 
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (val && index < 7) { 
       inputRefs.current[index + 1].focus();
     }
@@ -48,25 +43,20 @@ function JoinByCode({ onClose }) {
 
   const handlePaste = (e) => {
     e.preventDefault();
-    // CHANGED: Slice to 8 characters
     const val = e.clipboardData.getData("text").slice(0, 8);
     
-    // Check if alphanumeric
     if (!/^[a-zA-Z0-9]+$/.test(val)) return;
 
     const newOtp = val.toUpperCase().split("");
-    while (newOtp.length < 8) newOtp.push(""); // Fill rest
+    while (newOtp.length < 8) newOtp.push(""); 
     setOtp(newOtp);
 
-    // Focus appropriate box
     const lastFilled = val.length < 8 ? val.length : 7;
     inputRefs.current[lastFilled].focus();
   };
 
-  // --- API ACTIONS ---
   const handleVerify = async () => {
     const code = otp.join("");
-    // CHANGED: Check for length 8
     if (code.length < 8) return;
 
     setLoading(true);
@@ -104,7 +94,6 @@ function JoinByCode({ onClose }) {
     }
   };
 
-  // Auto-trigger verify when 8 digits are filled
   useEffect(() => {
     if (otp.every((char) => char !== "")) {
       handleVerify();
@@ -121,7 +110,6 @@ function JoinByCode({ onClose }) {
             <p className="subtitle">Enter the 8-character room code.</p>
         </div>
 
-        {/* OTP INPUTS */}
         <div className="otp-container">
           {otp.map((data, index) => (
             <input

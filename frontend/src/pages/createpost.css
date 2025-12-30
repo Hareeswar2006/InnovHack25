@@ -3,18 +3,24 @@
     display: flex;
     justify-content: center;
     padding: 60px 20px;
-    background-color: #0f0f13; /* Deep dark obsidian */
+    /* 🟢 Transparent so global background shows */
+    background: transparent; 
     min-height: 100vh;
 }
 
 .create-post-container {
     width: 100%;
     max-width: 650px;
-    background-color: #1a1a24; /* Classy dark grey */
-    border: 1px solid #2d2d3f;
-    border-radius: 24px; /* More rounded for modern look */
+    
+    /* 🟢 Premium Glass Effect */
+    background: rgba(26, 26, 36, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    
+    border-radius: 24px;
     padding: 40px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
     position: relative;
     animation: cpFadeIn 0.6s ease-out;
 }
@@ -61,8 +67,8 @@
 }
 
 .cp-glass-input {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid #2d2d3f;
+    background: rgba(0, 0, 0, 0.2); /* Darker input bg for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #f8fafc;
     padding: 14px 18px;
     border-radius: 12px;
@@ -73,7 +79,7 @@
 
 .cp-glass-input:focus {
     border-color: #ef4444;
-    background: rgba(239, 68, 68, 0.02);
+    background: rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
 }
 
@@ -89,15 +95,15 @@
     gap: 20px;
 }
 
-/* --- 🟢 4. Custom Dropdown (No Browser GUI) --- */
+/* --- 4. Custom Dropdown (No Browser GUI) --- */
 .custom-scope-wrapper {
     position: relative;
     width: 100%;
 }
 
 .scope-trigger {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid #2d2d3f;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 12px 16px;
     color: #cbd5e1;
@@ -113,7 +119,7 @@
 .scope-trigger:hover, .scope-trigger.active {
     border-color: #ef4444;
     color: #fff;
-    background: rgba(239, 68, 68, 0.05);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .scope-arrow {
@@ -131,6 +137,7 @@
     top: calc(100% + 8px);
     left: 0;
     width: 100%;
+    /* Solid dark background for dropdown readability */
     background: #1a1a24;
     border: 1px solid #2d2d3f;
     border-radius: 12px;
@@ -171,7 +178,7 @@
     align-items: center;
     justify-content: center;
     padding: 30px;
-    border: 2px dashed #2d2d3f;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.01);
@@ -191,21 +198,29 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #111827;
+    background-color: rgba(0, 0, 0, 0.3);
     padding: 10px 16px;
     border-radius: 10px;
     margin-top: 10px;
-    border: 1px solid #1f2937;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cp-file-item button {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 /* --- 6. Toggle Switch Area --- */
 .cp-toggle-area {
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: rgba(0, 0, 0, 0.2);
     padding: 20px;
     border-radius: 16px;
     margin-top: 25px;
     margin-bottom: 25px;
-    border: 1px solid #2d2d3f;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .cp-checkbox-container {
@@ -270,45 +285,69 @@
     gap: 12px;
 }
 
-/* 🎓 Campus Badge for PostCard */
-.campus-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    padding: 4px 12px;
-    border-radius: 20px;
-    position: absolute;
-    top: 20px;
-    right: 20px; /* Adjust to stay clear of View Details */
-}
-
-.badge-text {
-    color: #ef4444;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* --- Create Post Form Overrides --- */
-.custom-scope-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-/* Ensure the form doesn't clip the dropdowns */
+/* Ensure form doesn't clip dropdowns */
 .cp-card, .create-post-container {
     overflow: visible;
 }
 
-/* Re-use the scope-trigger and scope-dropdown-menu styles from announcements.css 
-   or ensure they are globally available for consistency. */
+.cp-hint-text {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 6px;
+    font-style: italic;
+}
 
-/* Mobile Optimization */
-@media (max-width: 600px) {
-    .cp-row { grid-template-columns: 1fr; gap: 0; }
-    .create-post-container { padding: 25px; border-radius: 0; }
-    .create-post-layout { padding: 0; }
+/* Ensure Team Size input doesn't look like browser default */
+input[type="number"]::-webkit-inner-spin-button {
+    opacity: 1;
+    filter: invert(1); 
+}
+
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablets & Smaller (Max-width: 800px) */
+@media (max-width: 800px) {
+    .create-post-container {
+        padding: 30px 20px;
+        margin: 20px 10px;
+    }
+
+    .cp-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .cp-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .file-drop-zone {
+        padding: 20px;
+    }
+}
+
+/* Mobile Phones (Max-width: 500px) */
+@media (max-width: 500px) {
+    .create-post-layout {
+        padding: 0;
+        background: transparent;
+    }
+
+    .create-post-container {
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        padding: 20px;
+        /* Slightly more opaque on mobile for readability */
+        background: rgba(26, 26, 36, 0.85); 
+    }
+
+    .cp-toggle-area {
+        padding: 15px;
+    }
+
+    .cp-submit-btn {
+        font-size: 1rem;
+        padding: 14px;
+    }
 }

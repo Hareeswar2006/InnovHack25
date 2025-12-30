@@ -4,9 +4,7 @@ import PostCard from "../components/postcard.jsx";
 import { fetchAnnouncements } from "../api/posts.js";
 import "./profile.css";
 
-// 🟢 Classy Selection List
 const COLLEGE_LIST = [
-    // --- Top Tier (1-50) ---
     "Indian Institute of Technology Madras", "Indian Institute of Science Bengaluru",
     "Indian Institute of Technology Bombay", "Indian Institute of Technology Delhi",
     "Indian Institute of Technology Kanpur", "Indian Institute of Technology Kharagpur",
@@ -32,9 +30,7 @@ const COLLEGE_LIST = [
     "Indian Institute of Science Education & Research Pune", "Indian Institute of Technology Gandhinagar",
     "Alagappa University", "Indian Institute of Technology Ropar",
     "Indian Institute of Technology Patna", "National Institute of Technology Calicut",
-
-    // --- Mid Tier (51-100) ---
-    "Delhi Technological University", "Jamia Hamdard", "University of Kerala",
+   "Delhi Technological University", "Jamia Hamdard", "University of Kerala",
     "Visva Bharati", "Mysore University", "Koneru Lakshmaiah Education Foundation",
     "Savitribai Phule Pune University", "Madurai Kamaraj University",
     "Sathyabama Institute of Science and Technology", "Maharshi Dayanand University",
@@ -53,8 +49,6 @@ const COLLEGE_LIST = [
     "International Institute of Information Technology Hyderabad", "P. S. G. College of Arts and Science",
     "Hindu College", "Miranda House", "St. Stephen's College",
     "Presidency College Chennai", "Loyola College Chennai", "Hans Raj College",
-
-    // --- Rank Band (101-150 Alphabetical) ---
     "Acharya Nagarjuna University", "Amity University Haryana", "Assam University",
     "Banasthali Vidyapith", "Bangalore University", "Bharati Vidyapeeth",
     "Central University of Tamil Nadu", "CCS Haryana Agricultural University",
@@ -81,7 +75,6 @@ function Profile() {
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
     
-    // States
     const [user, setUser] = useState(null);
     const [myPosts, setMyPosts] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -89,7 +82,6 @@ function Profile() {
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState(null);
 
-    // Custom Search States
     const [collegeSearch, setCollegeSearch] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -103,7 +95,6 @@ function Profile() {
         }
     }, []);
 
-    // Close suggestions when clicking outside
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -143,6 +134,7 @@ function Profile() {
                 const updatedUser = result.user || { ...user, ...editData };
                 setUser(updatedUser);
                 localStorage.setItem("user", JSON.stringify(updatedUser));
+                console.log(localStorage.getItem("user"));
                 setIsEditing(false);
                 showToast("Profile updated successfully!", "success");
             } else { showToast(result.message || "Update failed", "error"); }
@@ -160,7 +152,6 @@ function Profile() {
         <div className="profile-page-layout">
             <div className="profile-container">
                 
-                {/* 1. IDENTITY HEADER */}
                 <div className="profile-header-glass">
                     <div className="profile-avatar-large">
                         <div className="avatar-glow"></div>
@@ -202,7 +193,6 @@ function Profile() {
                                             }}
                                         />
                                         
-                                        {/* CUSTOM FLOATING MENU (No Browser GUI) */}
                                         {showSuggestions && !user.college && (
                                             <div className="custom-suggestions-menu">
                                                 {filteredColleges.length > 0 ? (
@@ -245,7 +235,6 @@ function Profile() {
                     </div>
                 </div>
 
-                {/* 2. CONTENT GRID */}
                 <div className="profile-grid">
                     <div className="profile-sidebar">
                         <div className="stat-card-glass">

@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/auth";
 import { setToken } from "../utils/auth";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2"; 
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Removed 'error' state, replacing with Pop-up
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -23,21 +22,19 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(res.user));
         }
 
-        // SUCCESS POP-UP (Auto-close timer)
         Swal.fire({
           icon: 'success',
           title: 'Login Successful',
           text: 'Redirecting to dashboard...',
           background: '#1a1a2e',
           color: '#ffffff',
-          timer: 1500, // Closes automatically after 1.5 seconds
+          timer: 1500, 
           showConfirmButton: false
         }).then(() => {
            navigate("/announcements");
         });
 
       } else {
-        // ERROR POP-UP
         Swal.fire({
           icon: 'error',
           title: 'Login Failed',
@@ -48,7 +45,6 @@ function Login() {
         });
       }
     } catch (err) {
-      // NETWORK ERROR POP-UP
       Swal.fire({
         icon: 'error',
         title: 'Network Error',

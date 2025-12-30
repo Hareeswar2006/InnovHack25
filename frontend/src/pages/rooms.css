@@ -6,7 +6,10 @@
   width: 100%;
   min-height: 100vh;
   padding: 32px 40px;
-  background-color: #121218;
+  
+  /* 🟢 Transparent so the global rich background shows */
+  background: transparent;
+  
   color: #ffffff;
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
@@ -67,7 +70,10 @@
 .rooms-tabs {
   display: flex;
   gap: 40px;
-  border-bottom: 1px solid #2d2d3f;
+  
+  /* 🟢 Lighter, semi-transparent border for the rich background */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
   margin-bottom: 32px;
   width: 100%;
 }
@@ -80,6 +86,7 @@
   padding-bottom: 16px;
   font-size: 1.05rem;
   transition: color 0.3s ease;
+  white-space: nowrap; /* Prevent wrapping on mobile */
 }
 
 .tab:hover {
@@ -116,9 +123,54 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
-  .rooms-layout-wrapper { padding: 20px; }
-  .rooms-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .fab { align-self: flex-end; margin-top: -40px; }
-  .rooms-tabs { gap: 24px; font-size: 0.95rem; overflow-x: auto; padding-bottom: 0; }
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablet & Smaller (Max-width: 900px) */
+@media (max-width: 900px) {
+    .rooms-layout-wrapper { 
+        padding: 24px; 
+    }
+}
+
+/* Mobile Phones (Max-width: 600px) */
+@media (max-width: 600px) {
+    .rooms-layout-wrapper { 
+        padding: 20px 15px; 
+    }
+    
+    .rooms-header { 
+        align-items: center; 
+        gap: 15px; 
+    }
+
+    .header-text h2 {
+        font-size: 1.8rem;
+    }
+
+    .header-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    /* Adjust FAB size for mobile */
+    .fab { 
+        width: 42px;
+        height: 42px;
+        font-size: 24px;
+        flex-shrink: 0; /* Prevent shrinking if text is long */
+    }
+    
+    /* Make tabs scrollable horizontally */
+    .rooms-tabs { 
+        gap: 20px; 
+        font-size: 0.95rem; 
+        overflow-x: auto; 
+        padding-bottom: 0; 
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+    }
+
+    /* Hide scrollbar for cleaner look */
+    .rooms-tabs::-webkit-scrollbar {
+        height: 0px;
+        background: transparent;
+    }
 }

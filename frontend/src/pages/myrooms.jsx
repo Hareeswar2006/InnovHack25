@@ -43,13 +43,11 @@ function MyRooms() {
 
   return (
     <div className="my-rooms-container">
-      {/* Header Section */}
       <div className="mr-header">
         <h3>Your Rooms</h3>
         <p>Manage your active projects and applications.</p>
       </div>
 
-      {/* Grid Section */}
       <div className="mr-grid">
         {rooms.length === 0 && (
           <div className="mr-empty">
@@ -67,20 +65,17 @@ function MyRooms() {
             role="button"
             tabIndex={0}
           >
-            {/* 1. Top Bar: Role Badge */}
             <div className="mr-card-top">
               <span className={`role-badge ${room.myRole.toLowerCase()}`}>
                 {room.myRole}
               </span>
             </div>
 
-            {/* 2. Content: Title & Desc */}
             <div className="mr-card-content">
               <h3>{room.post?.title || "Untitled Post"}</h3>
               <p>{room.post?.description || "No description provided."}</p>
             </div>
 
-            {/* 3. Footer: Status Information */}
             <div className="mr-card-footer">
               {(room.myRole === "Admin" || room.myRole === "Member") && (
                 <div className="mr-status-row">

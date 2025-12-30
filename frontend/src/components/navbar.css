@@ -14,6 +14,7 @@
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    transition: padding 0.3s ease;
 }
 
 /* --- Logo Styling --- */
@@ -43,6 +44,7 @@
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
+    white-space: nowrap; /* Prevent text wrapping inside link */
 }
 
 /* Hover Effect: Turns bright white */
@@ -77,6 +79,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .btn-logout:hover {
@@ -85,8 +88,6 @@
     box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
     transform: translateY(-2px);
 }
-
-/* ... Keep all your previous CSS ... */
 
 /* --- Special 'Get Started' Button for Guests --- */
 .btn-highlight {
@@ -99,10 +100,53 @@
     font-size: 0.95rem;
     box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); /* Nice Glow */
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .btn-highlight:hover {
     background: #ff5e78;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(233, 69, 96, 0.6);
+}
+
+/* --- 📱 MOBILE RESPONSIVENESS --- */
+
+/* Tablets & Small Laptops (Max-width: 900px) */
+@media (max-width: 900px) {
+    .navbar {
+        padding: 15px 30px;
+    }
+    
+    .navbar-right {
+        gap: 20px;
+    }
+}
+
+/* Mobile Phones (Max-width: 650px) */
+@media (max-width: 650px) {
+    .navbar {
+        flex-direction: column; /* Stack Logo on top of links */
+        padding: 15px 20px;
+        gap: 15px;
+    }
+
+    .navbar-right {
+        width: 100%;
+        justify-content: center; /* Center the links */
+        flex-wrap: wrap; /* Allow wrapping if many links */
+        gap: 15px 20px; /* Vertical gap 15px, Horizontal 20px */
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+    }
+
+    .btn-logout, .btn-highlight {
+        padding: 6px 16px;
+        font-size: 0.85rem;
+    }
 }

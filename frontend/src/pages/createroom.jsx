@@ -10,7 +10,6 @@ function CreateRoom() {
   const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
-  // --- Toast Helper ---
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -34,7 +33,6 @@ function CreateRoom() {
     try {
         showToast("Setting up your room...", "success");
         const res = await createRoom(postId);
-        // Navigate after a short delay to allow toast visibility
         setTimeout(() => navigate(`/rooms/${res.room.id || res.room._id}`), 1000);
     } catch (error) {
         showToast("Failed to create room", "error");
@@ -44,13 +42,11 @@ function CreateRoom() {
   return (
     <div className="cr-layout-wrapper">
       <div className="cr-container">
-        {/* Header Section */}
         <div className="cr-header">
             <h2>Create Room</h2>
             <p>Convert an existing post into a private team workspace.</p>
         </div>
 
-        {/* Action: Create New Post */}
         <div className="cr-new-post-box">
             <p>Don't have a post yet?</p>
             <button
@@ -65,7 +61,6 @@ function CreateRoom() {
             <span>OR SELECT AN EXISTING POST</span>
         </div>
 
-        {/* Selection Grid */}
         <div className="cr-posts-grid">
           {loading ? (
             <div className="cr-loading">
@@ -101,7 +96,6 @@ function CreateRoom() {
           )}
         </div>
 
-        {/* --- TOAST NOTIFICATION --- */}
         {toast && (
           <div className={`cr-toast ${toast.type}`}>
             {toast.type === "success" ? "✅" : "⚠️"} 

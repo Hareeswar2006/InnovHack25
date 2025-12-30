@@ -11,7 +11,6 @@ function DiscoverRooms() {
   
   const navigate = useNavigate();
 
-  // --- Fetch Data ---
   useEffect(() => {
     const loadRooms = async () => {
       try {
@@ -26,7 +25,6 @@ function DiscoverRooms() {
     loadRooms();
   }, []);
 
-  // --- Loading State ---
   if (loading) return (
     <div className="discover-loading">
       <div className="spinner"></div>
@@ -34,7 +32,6 @@ function DiscoverRooms() {
     </div>
   );
 
-  // --- User Extraction & Safety Checks ---
   const localData = JSON.parse(localStorage.getItem("user"));
   const currentUser = localData?.user || localData;
   const currentUserId = currentUser?._id || currentUser?.id || currentUser?.userId;
@@ -48,7 +45,6 @@ function DiscoverRooms() {
       );
   }
 
-  // --- Filtering Logic (Unchanged) ---
   const filteredRooms = rooms.filter((room) => {
     const adminId = room.admin?._id || room.admin || room.createdBy;
     const isAdmin = String(adminId) === String(currentUserId);
@@ -70,14 +66,12 @@ function DiscoverRooms() {
 
   return (
     <div className="discover-container">
-      {/* --- HEADER SECTION --- */}
       <div className="discover-header-row">
         <div className="dh-text">
             <h3>Available Rooms</h3>
             <p>Browse projects looking for your skills.</p>
         </div>
         
-        {/* JOIN BY CODE BUTTON */}
         <button 
           className="btn-join-code"
           onClick={() => setShowCodeModal(true)}
@@ -86,7 +80,6 @@ function DiscoverRooms() {
         </button>
       </div>
 
-      {/* --- ROOMS GRID --- */}
       <div className="rooms-grid">
         {filteredRooms.length === 0 ? (
           <div className="rooms-empty">
@@ -103,7 +96,6 @@ function DiscoverRooms() {
               role="button"
               tabIndex={0}
             >
-              {/* Card Header: Status & Title */}
               <div className="dc-header">
                 <div className="dc-top-row">
                     <span className={`status-badge ${room.status?.toLowerCase() || 'open'}`}>
@@ -113,7 +105,6 @@ function DiscoverRooms() {
                 <h3 className="dc-title">{room.post?.title || "Untitled Room"}</h3>
               </div>
 
-              {/* Card Body: Description & Skills */}
               <div className="dc-body">
                 <p className="dc-description">
                   {room.post?.description || "No description provided."}
@@ -133,7 +124,6 @@ function DiscoverRooms() {
                 </div>
               </div>
 
-              {/* Card Footer: Action */}
               <div className="dc-footer">
                 <span className="dc-link">View Details &rarr;</span>
               </div>
@@ -142,7 +132,6 @@ function DiscoverRooms() {
         )}
       </div>
 
-      {/* --- MODAL --- */}
       {showCodeModal && (
         <JoinByCode onClose={() => setShowCodeModal(false)} />
       )}

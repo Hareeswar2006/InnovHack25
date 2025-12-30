@@ -221,6 +221,8 @@ export const addCommentToPost = async (req, res) => {
         post.comments.push(newComment);
         await post.save();
 
+        await post.populate("comments.user", "name profilePic");
+
         return res.status(201).json({
             message: "Comment added successfully",
             comments: post.comments
@@ -264,6 +266,7 @@ export const replyToComment = async (req, res) => {
     });
 
     await post.save();
+    await post.populate("comments.replies.user", "name");
 
     return res.status(201).json({
       message: "Reply added successfully",

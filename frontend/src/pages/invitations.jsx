@@ -6,7 +6,6 @@ import "./invitations.css";
 function RoomInvitations() {
   const [invitations, setInvitations] = useState([]);
   const [loading, setLoading] = useState(true);
-  // New State for Popup
   const [toast, setToast] = useState(null); 
 
   const navigate = useNavigate();
@@ -26,7 +25,6 @@ function RoomInvitations() {
     loadInvitations();
   }, []);
 
-  // Helper to show toast
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000); 
@@ -41,17 +39,13 @@ function RoomInvitations() {
       );
 
       if (status === 'accepted') {
-        // CHANGED: alert -> toast
         showToast("Joined successfully! Redirecting...", "success");
-        // Slight delay to let user see toast before redirect
         setTimeout(() => navigate(`/rooms/${roomId}`), 1500);
       }
       if (status === 'declined') {
-        // CHANGED: alert -> toast
         showToast("Invitation declined", "default");
       }
     } catch (error) {
-      // CHANGED: alert -> toast
       showToast("Action failed. Please try again.", "error");
     }
   };
@@ -67,13 +61,11 @@ function RoomInvitations() {
 
   return (
     <div className="invitations-container">
-      {/* Header Section */}
       <div className="ri-header">
         <h3>Pending Invitations</h3>
         <p>Accept or decline requests to join new teams.</p>
       </div>
 
-      {/* Empty State */}
       {invitations.length === 0 && (
         <div className="ri-empty">
            <div className="empty-icon">📭</div>
@@ -82,7 +74,6 @@ function RoomInvitations() {
         </div>
       )}
 
-      {/* Grid */}
       <div className="ri-grid">
         {invitations.map((inv) => (
           <div className="ri-card" key={inv.invitationId}>
@@ -111,7 +102,6 @@ function RoomInvitations() {
         ))}
       </div>
 
-      {/* --- POPUP TOAST NOTIFICATION --- */}
       {toast && (
         <div className={`ri-toast ${toast.type}`}>
           {toast.type === "success" && "✅"}

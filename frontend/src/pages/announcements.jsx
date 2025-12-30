@@ -6,6 +6,7 @@ import { fetchAnnouncements } from "../api/posts.js";
 import "./announcements.css";
 
 function Announcements() {
+    const { hash } = useLocation();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState(""); 
@@ -21,7 +22,6 @@ function Announcements() {
     const navigate = useNavigate();
     const currentUser = JSON.parse(localStorage.getItem("user"));
 
-    // Check if college information is missing from user profile
     const isCollegeMissing = !currentUser?.college || currentUser.college.trim() === "";
 
     useEffect(() => {
@@ -38,7 +38,36 @@ function Announcements() {
         loadAnnouncements();
     }, []);
 
-    // Close dropdowns on click outside
+    useEffect(() => {
+        if (!loading && hash && posts.length > 0) {
+            const targetId = hash.replace("#", "");
+            
+            const scrollAttempt = () => {
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    element.style.transition = "all 0.5s ease";
+                    element.style.borderColor = "#ef4444";
+                    element.style.boxShadow = "0 0 40px rgba(239, 68, 68, 0.4)";
+                    
+                    setTimeout(() => {
+                        element.style.borderColor = "";
+                        element.style.boxShadow = "";
+                    }, 4000);
+                    return true;
+                }
+                return false;
+            };
+
+            if (!scrollAttempt()) {
+                const interval = setInterval(() => {
+                    if (scrollAttempt()) clearInterval(interval);
+                }, 100);
+                setTimeout(() => clearInterval(interval), 2000);
+            }
+        }
+    }, [loading, hash, posts]);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (sortRef.current && !sortRef.current.contains(event.target)) setShowSort(false);
@@ -50,29 +79,21 @@ function Announcements() {
 
     const processedPosts = posts
         .filter((post) => {
-            // 1. Privacy Guard Logic
+            const isTargetPost = hash === `#post-${post._id}`;
+            if (isTargetPost) return true;
+
             const isPublic = post.scope === "public";
-            
-            // 🟢 ROBUST CHECK: Identify the creator's college
-            // Some backends use 'creator', some use 'createdBy'. We check both.
             const creatorCollege = post.createdBy?.college || post.creator?.college;
             const userCollege = currentUser?.college;
 
-
-            // 🟢 LOGIC: A post is visible if:
-            // a) It is public
-            // b) OR (User has a college AND it matches the creator's college)
             const isSameCollege = userCollege && 
                                   creatorCollege && 
                                   userCollege.trim().toLowerCase() === creatorCollege.trim().toLowerCase();
             
-            // If it's not public AND not your college mate, hide it.
             if (!isPublic && !isSameCollege) return false;
 
-            // 2. UI Filter: Scopes (Dropdown Selection)
             if (scopeFilter !== "all" && post.scope !== scopeFilter) return false;
 
-            // 3. Category & Search Filters
             const matchesCategory = activeFilter === "all" || post.category?.toLowerCase() === activeFilter.toLowerCase();
             const query = searchQuery.toLowerCase();
             const matchesSearch = 
@@ -82,7 +103,7 @@ function Announcements() {
 
             return matchesCategory && matchesSearch;
         })
-        .sort((a, b) => {
+        .sort((a, b) => {            
             if (sortBy === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
             if (sortBy === "popular") return (b.room?.members?.length || 0) - (a.room?.members?.length || 0);
             return 0;
@@ -92,7 +113,6 @@ function Announcements() {
         <div className="dashboard-layout">
             <div className="feed-section">
                 
-                {/* LinkedIn-Style Completion Banner */}
                 {isCollegeMissing && (
                     <div className="profile-completion-banner">
                         <div className="banner-content">
@@ -145,7 +165,6 @@ function Announcements() {
                         </div>
 
                         <div className="actions-group">
-                            {/* Scope Selector */}
                             <div className="custom-sort-wrapper" ref={scopeRef}>
                                 <button className={`sort-trigger ${showScope ? 'active' : ''}`} onClick={() => setShowScope(!showScope)}>
                                     <span>{scopeFilter === "all" ? "All Scopes" : scopeFilter === "public" ? "🌍 Public" : "🎓 College"}</span>
@@ -160,7 +179,6 @@ function Announcements() {
                                 )}
                             </div>
 
-                            {/* Sort Selector */}
                             <div className="custom-sort-wrapper" ref={sortRef}>
                                 <button className={`sort-trigger ${showSort ? 'active' : ''}`} onClick={() => setShowSort(!showSort)}>
                                     <span>{sortBy === "newest" ? "Newest First" : "Most Popular"}</span>

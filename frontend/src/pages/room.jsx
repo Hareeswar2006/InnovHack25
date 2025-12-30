@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchRoom, updateApplicationStatus, requestToJoinRoom, fetchRoomRecommendations, sendRoomInvitation } from "../api/rooms";
+import ChatWindow from "../components/chatwindow";
 import "./room.css";
 
 function Room() {
@@ -12,12 +13,10 @@ function Room() {
   const [recommendations, setRecommendations] = useState([]);
   const [actionLoading, setActionLoading] = useState(false);
   
-  // New Toast State
   const [toast, setToast] = useState(null);
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
-  // --- Toast Helper ---
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -41,7 +40,6 @@ function Room() {
   useEffect(() => {
     if (room && room.admin === currentUser.id && room.status === "open") {
       setRecLoading(true);
-      
       fetchRoomRecommendations(roomId)
         .then((res) => {
           setRecommendations(res.suggestions || res.recommendations || []);
@@ -73,15 +71,9 @@ function Room() {
     });
 
     if (invite) {
-      if (invite.status === 'pending') {
-        return { label: "Pending", disabled: true, className: "btn-warning" };
-      }
-      if (invite.status === "declined") {
-        return { label: "Declined", disabled: true, className: "btn-danger" };
-      }
-      if (invite.status === 'accepted') {
-        return { label: "Joined", disabled: true, className: "btn-success" };
-      }
+      if (invite.status === 'pending') return { label: "Pending", disabled: true, className: "btn-warning" };
+      if (invite.status === "declined") return { label: "Declined", disabled: true, className: "btn-danger" };
+      if (invite.status === 'accepted') return { label: "Joined", disabled: true, className: "btn-success" };
     }
 
     return { label: "Invite", disabled: false, className: "btn-outline" };
@@ -90,20 +82,15 @@ function Room() {
   const handleSendInvite = async (targetUserId) => {
     try {
       await sendRoomInvitation(roomId, targetUserId);
-
       setRoom(prev => ({
         ...prev,
-        invitations: [
-          ...(prev.invitations || []), 
-          { user: targetUserId, status: 'pending' }
-        ]
+        invitations: [ ...(prev.invitations || []), { user: targetUserId, status: 'pending' } ]
       }));
       showToast("Invitation sent successfully!", "success");
     } catch (error) {
       showToast("Failed to send invitation", "error");
     }
   };
-
 
   if (loading) return (
     <div className="room-container">
@@ -121,7 +108,6 @@ function Room() {
   const myApplication = room.applications.find((app) => app.user._id === currentUser.id);
   const isApplicant = !!myApplication;
 
-  // --- VIEW: Restricted Access ---
   if (!isAdmin && !isMember && !isApplicant) {
     return (
       <div className="room-container">
@@ -149,188 +135,163 @@ function Room() {
             {actionLoading ? "Requesting..." : "Request to Join"}
           </button>
         </div>
-        
-        {/* Toast Container */}
-        {toast && (
-            <div className={`rc-toast ${toast.type}`}>
-            {toast.type === "success" ? "✅" : "⚠️"} {toast.message}
-            </div>
-        )}
+        {toast && <div className={`rc-toast ${toast.type}`}><span>{toast.message}</span></div>}
       </div>
     );
   }
 
-  // --- VIEW: Main Room Dashboard ---
   return (
     <div className="room-container">
       
-      {/* 1. Header Card */}
-      <div className="room-card">
-        <div className="rc-header">
-            <h2>{room.post.title}</h2>
-            <span className={`status-pill ${room.status}`}>{room.status}</span>
+      <div className="room-dashboard-grid">
+        
+        <div className="room-left-panel">
+            <div className="room-card">
+                <div className="rc-header">
+                    <h2>{room.post.title}</h2>
+                    <span className={`status-pill ${room.status}`}>{room.status}</span>
+                </div>
+                <p className="room-description">{room.post.description}</p>
+                <div className="room-skills">
+                <span className="skill-label">Required Skills:</span>
+                {room.post.skillsRequired.map((skill, index) => (
+                    <span key={index} className="rc-skill-tag">{skill}</span>
+                ))}
+                </div>
+            </div>
+
+            {isApplicant && !isMember && !isAdmin && (
+                <div className="room-card">
+                <h3>Your Application</h3>
+                <div className="application-status-box">
+                    <span>Current Status:</span> 
+                    <span className={`status-badge ${myApplication.status}`}>{myApplication.status}</span>
+                </div>
+                </div>
+            )}
+
+            {isMember && (
+                <div className="room-card">
+                <h3>Team Members</h3>
+                <div className="member-list">
+                    {room.members.map((m) => (
+                    <div className="member-item" key={m.user._id}>
+                        <img src={m.user.profilePic || "https://via.placeholder.com/40"} alt="profile" />
+                        <div className="member-info">
+                            <span className="member-name">{m.user.name}</span>
+                            <span className="member-role">{m.role}</span>
+                        </div>
+                    </div>
+                    ))}
+                </div>
+                </div>
+            )}
+
+            {isAdmin && (
+                <>
+                <div className="room-card">
+                    <div className="code-box">
+                        <strong>Room Code:</strong> 
+                        <span className="the-code">{room.roomCode}</span>
+                    </div>
+                </div>
+
+                <div className="room-card">
+                    <h3>Pending Applications</h3>
+                    {room.applications.filter((app) => app.status === "pending").length === 0 && (
+                    <p className="text-muted">No pending applications</p>
+                    )}
+                    
+                    <div className="applications-list">
+                        {room.applications
+                        .filter((app) => app.status === "pending")
+                        .map((app) => (
+                            <div className="application-item" key={app._id}>
+                                <div className="member-item">
+                                    <img src={app.user.profilePic || "https://via.placeholder.com/40"} alt="" />
+                                    <div>
+                                        <strong>{app.user.name}</strong>
+                                        <p className="app-msg">{app.message || "No message"}</p>
+                                    </div>
+                                </div>
+                                <div className="application-actions">
+                                    <button className="btn btn-primary btn-sm" onClick={async () => {
+                                        await updateApplicationStatus(room._id || room.roomId, app._id, "accept");
+                                        showToast(`${app.user.name} accepted!`, "success");
+                                        loadRoom();
+                                    }}>Accept</button>
+                                    
+                                    <button className="btn btn-outline btn-sm" onClick={async () => {
+                                        await updateApplicationStatus(room._id || room.roomId, app._id, "reject");
+                                        showToast("Application rejected", "default");
+                                        loadRoom();
+                                    }}>Reject</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {recLoading && (
+                    <div className="room-card loading-card">
+                        <div className="spinner-sm"></div>
+                        <p className="text-muted">AI is analyzing candidate skills...</p>
+                    </div>
+                )}
+
+                {!recLoading && recommendations.length > 0 && (
+                    <div className="room-card">
+                    <h3>AI Recommended Candidates</h3>
+                    <p className="text-muted small-text">Ranked by skill match & proficiency.</p>
+                    <div className="recommendations-list">
+                        {recommendations.map((user) => {
+                            const btnStatus = getInviteStatus(user.userId);
+                            return (
+                                <div className="recommendation-item" key={user.userId}>
+                                <div className="rec-left">
+                                    <img src={user.profilePic || "https://via.placeholder.com/40"} alt="" />
+                                    <div className="rec-info">
+                                        <div className="rec-name-row">
+                                            <strong>{user.name}</strong>
+                                            <span className="match-badge">⚡ {user.matchScore}% Match</span>
+                                        </div>
+                                        <div className="matched-skills-list">
+                                            {user.matchedSkills && user.matchedSkills.length > 0 ? (
+                                                user.matchedSkills.map((skill, idx) => (
+                                                    <span key={idx} className="skill-tag-mini">{skill.name}</span>
+                                                ))
+                                            ) : <span className="text-muted small-text">No specific tags</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <button className={`btn ${btnStatus.className} btn-sm`} disabled={btnStatus.disabled} onClick={() => handleSendInvite(user.userId)}>
+                                    {btnStatus.label}
+                                </button>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    </div>
+                )}
+
+                {!recLoading && recommendations.length === 0 && (
+                    <div className="room-card text-center empty-rec">
+                        <h3>No Candidates Found</h3>
+                        <p>We couldn't find any users matching your exact requirements.</p>
+                    </div>
+                )}
+                </>
+            )}
         </div>
-        <p className="room-description">{room.post.description}</p>
-        <div className="room-skills">
-          <span className="skill-label">Required Skills:</span>
-          {room.post.skillsRequired.map((skill, index) => (
-             <span key={index} className="rc-skill-tag">{skill}</span>
-          ))}
-        </div>
+
+        {(isMember || isAdmin) && (
+            <div className="room-right-panel">
+                <ChatWindow roomId={room._id || room.id || roomId} currentUser={currentUser} />
+            </div>
+        )}
       </div>
 
-      {/* 2. Applicant Status Card */}
-      {isApplicant && !isMember && !isAdmin && (
-        <div className="room-card">
-          <h3>Your Application</h3>
-          <div className="application-status-box">
-             <span>Current Status:</span> 
-             <span className={`status-badge ${myApplication.status}`}>{myApplication.status}</span>
-          </div>
-        </div>
-      )}
-
-      {/* 3. Team Members Card */}
-      {isMember && (
-        <div className="room-card">
-          <h3>Team Members</h3>
-          <div className="member-list">
-            {room.members.map((m) => (
-              <div className="member-item" key={m.user._id}>
-                <img src={m.user.profilePic || "https://via.placeholder.com/40"} alt="profile" />
-                <div className="member-info">
-                    <span className="member-name">{m.user.name}</span>
-                    <span className="member-role">{m.role}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 4. Admin Dashboard */}
-      {isAdmin && (
-        <>
-          <div className="room-card">
-            <div className="code-box">
-                <strong>Room Code:</strong> 
-                <span className="the-code">{room.roomCode}</span>
-            </div>
-          </div>
-
-          <div className="room-card">
-            <h3>Pending Applications</h3>
-            {room.applications.filter((app) => app.status === "pending").length === 0 && (
-              <p className="text-muted">No pending applications</p>
-            )}
-            
-            <div className="applications-list">
-                {room.applications
-                .filter((app) => app.status === "pending")
-                .map((app) => (
-                    <div className="application-item" key={app._id}>
-                    <div className="member-item">
-                        <img src={app.user.profilePic || "https://via.placeholder.com/40"} alt="" />
-                        <div>
-                            <strong>{app.user.name}</strong>
-                            <p className="app-msg">{app.message || "No message"}</p>
-                        </div>
-                    </div>
-                    <div className="application-actions">
-                        <button className="btn btn-primary btn-sm" onClick={async () => {
-                            await updateApplicationStatus(room._id || room.roomId, app._id, "accept");
-                            showToast(`${app.user.name} accepted!`, "success");
-                            loadRoom();
-                        }}>Accept</button>
-                        
-                        <button className="btn btn-outline btn-sm" onClick={async () => {
-                            await updateApplicationStatus(room._id || room.roomId, app._id, "reject");
-                            showToast("Application rejected", "default");
-                            loadRoom();
-                        }}>Reject</button>
-                    </div>
-                    </div>
-                ))}
-            </div>
-          </div>
-
-          {recLoading && (
-             <div className="room-card loading-card">
-                <div className="spinner-sm"></div>
-                <p className="text-muted">AI is analyzing candidate skills...</p>
-             </div>
-          )}
-
-          {!recLoading && recommendations.length > 0 && (
-            <div className="room-card">
-              <h3>AI Recommended Candidates</h3>
-              <p className="text-muted small-text">
-                Ranked by skill match & proficiency.
-              </p>
-
-              <div className="recommendations-list">
-                {recommendations.map((user) => {
-                    const btnStatus = getInviteStatus(user.userId);
-                    return (
-                        <div className="recommendation-item" key={user.userId}>
-                          <div className="rec-left">
-                              <img src={user.profilePic || "https://via.placeholder.com/40"} alt="" />
-                              <div className="rec-info">
-                                  <div className="rec-name-row">
-                                      <strong>{user.name}</strong>
-                                      <span className="match-badge">
-                                        ⚡ {user.matchScore}% Match
-                                      </span>
-                                  </div>
-                                  
-                                  <div className="matched-skills-list">
-                                      {user.matchedSkills && user.matchedSkills.length > 0 ? (
-                                        user.matchedSkills.map((skill, idx) => (
-                                          <span key={idx} className="skill-tag-mini">
-                                            {skill.name}
-                                          </span>
-                                        ))
-                                      ) : (
-                                        <span className="text-muted small-text">No specific tags</span>
-                                      )}
-                                  </div>
-                              </div>
-                          </div>
-                          
-                          <button 
-                            className={`btn ${btnStatus.className} btn-sm`}
-                            disabled={btnStatus.disabled} 
-                            onClick={() => handleSendInvite(user.userId)}
-                          >
-                            {btnStatus.label}
-                          </button>
-                        </div>
-                    );
-                })}
-              </div>
-            </div>
-          )}
-
-          {!recLoading && recommendations.length === 0 && (
-            <div className="room-card text-center empty-rec">
-               <h3>No Candidates Found</h3>
-               <p>We couldn't find any users matching your exact requirements.</p>
-            </div>
-          )}
-
-        </>
-      )}
-
-      {/* --- TOAST NOTIFICATION --- */}
-      {toast && (
-        <div className={`rc-toast ${toast.type}`}>
-           {toast.type === "success" && "✅"}
-           {toast.type === "error" && "⚠️"}
-           {toast.type === "default" && "ℹ️"}
-           <span>{toast.message}</span>
-        </div>
-      )}
-
+      {toast && <div className={`rc-toast ${toast.type}`}><span>{toast.message}</span></div>}
     </div>
   );
 }
