@@ -1,6 +1,6 @@
 import { getToken } from "../utils/auth";
 
-const API_BASE = "https://p1w5x8bl-3000.inc1.devtunnels.ms";
+const API_BASE = "https://skillsync-backend-2mw0.onrender.com";
 
 export const uploadResume = async (file) => {
   const formData = new FormData();

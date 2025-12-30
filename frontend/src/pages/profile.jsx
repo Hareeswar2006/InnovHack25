@@ -128,7 +128,7 @@ function Profile() {
 
             // 🟢 CALL BACKEND API
             // MAKE SURE THIS URL MATCHES YOUR BACKEND PORT/PATH
-            const res = await fetch("https://p1w5x8bl-3000.inc1.devtunnels.ms/profile/upload-resume", { 
+            const res = await fetch("https://skillsync-backend-2mw0.onrender.com/profile/upload-resume", { 
                 method: "POST", // Your controller is "uploadResume", likely a POST or PUT
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -186,7 +186,7 @@ function Profile() {
     const handleUpdate = async () => {
         setLoading(true); 
         try {
-            const response = await fetch("https://p1w5x8bl-3000.inc1.devtunnels.ms/profile/edit", {
+            const response = await fetch("https://skillsync-backend-2mw0.onrender.com/profile/edit", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

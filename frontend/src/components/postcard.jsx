@@ -62,7 +62,7 @@ function PostCard({ post: initialPost, currentUser }) {
     }
 
     try {
-      const res = await fetch(`https://p1w5x8bl-3000.inc1.devtunnels.ms/posts/${post._id}/like`, {
+      const res = await fetch(`https://skillsync-backend-2mw0.onrender.com/posts/${post._id}/like`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +79,7 @@ function PostCard({ post: initialPost, currentUser }) {
     e.stopPropagation();
     if (!commentText.trim()) return;
     try {
-      const res = await fetch(`https://p1w5x8bl-3000.inc1.devtunnels.ms/posts/${post._id}/comments`, {
+      const res = await fetch(`https://skillsync-backend-2mw0.onrender.com/posts/${post._id}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,7 @@ function PostCard({ post: initialPost, currentUser }) {
   const handleAddReply = async (commentId) => {
     if (!replyText.trim()) return;
     try {
-      const res = await fetch(`https://p1w5x8bl-3000.inc1.devtunnels.ms/posts/${post._id}/comments/${commentId}/reply`, {
+      const res = await fetch(`https://skillsync-backend-2mw0.onrender.com/posts/${post._id}/comments/${commentId}/reply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
