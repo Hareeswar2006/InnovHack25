@@ -65,7 +65,7 @@ function ResumeBanner() {
     );
   }
 
-  const topSkills = [...skills].sort((a, b) => b.score - a.score).slice(0, 8);
+  const topSkills = [...skills].sort((a, b) => b.score - a.score).slice(0, 5);
 
   return (
     <div className="rb-outer-card">
