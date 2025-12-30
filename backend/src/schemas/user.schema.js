@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
                 },
                 source: {
                     type: String,
-                    enum: ["resume", "github", "manual"],
+                    enum: ["resume", "github", "manual", 'resume_analysis'],
                     default: "resume",
                 },
             },
